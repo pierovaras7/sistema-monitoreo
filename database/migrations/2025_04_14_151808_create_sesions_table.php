@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('sesiones', function (Blueprint $table) {
             $table->id();
             $table->string('titulo');
-            $table->dateTime('fecha_hora');
+            $table->dateTime('fecha_inicio');
+            $table->dateTime('fecha_fin');
             $table->foreignId('aula_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // asesor
+            $table->foreignId('asesor_id')->constrained()->onDelete('cascade'); // asesor
             $table->timestamps();
         });
         

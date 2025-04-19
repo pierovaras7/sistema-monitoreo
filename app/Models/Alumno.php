@@ -15,5 +15,9 @@ class Alumno extends Model
         'aula_id',
     ];
 
+    public function aulas()
+    {
+        return $this->belongsToMany(Aula::class, 'alumno_aula');
+    }
 
 }

@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('asistencias', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('sesiones_id')->constrained()->onDelete('cascade');
+        Schema::create('alumno_aula', function (Blueprint $table) {
+            $table->id(); // opcional
             $table->foreignId('alumno_id')->constrained()->onDelete('cascade');
-            $table->boolean('asistio')->default(false);
-            $table->string('observacion')->nullable();
-            $table->timestamps();
+            $table->foreignId('aula_id')->constrained()->onDelete('cascade');
+            $table->timestamps(); // opcional, por si quieres registrar cuándo se asignó
         });
     }
 
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('asistencias');
+        Schema::dropIfExists('alumno_aula');
     }
 };
