@@ -50,17 +50,19 @@ new class extends Component
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
-
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link
-                        :href="route('admin.asesores')"
-                        :active="request()->routeIs('admin.asesores')"
-                        wire:navigate
-                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
-                    >
-                        {{ __('Asesores') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
-                    </x-nav-link>
-                </div>
+                
+                @role('admin')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link
+                            :href="route('admin.asesores')"
+                            :active="request()->routeIs('admin.asesores')"
+                            wire:navigate
+                            class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                        >
+                            {{ __('Asesores') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                        </x-nav-link>
+                    </div>
+                @endrole
 
             </div>
 

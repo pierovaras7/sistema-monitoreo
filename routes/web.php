@@ -12,4 +12,7 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 require __DIR__.'/auth.php';
-Route::get('/admin/asesores', Asesores::class)->name('admin.asesores');
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/asesores', Asesores::class)->name('admin.asesores');
+});
