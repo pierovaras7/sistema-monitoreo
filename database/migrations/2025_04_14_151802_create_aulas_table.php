@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('codigo')->unique(); // Aseguramos que el código sea único
             $table->foreignId('instituciones_id')->constrained()->onDelete('cascade');
             $table->foreignId('asesores_id')->constrained()->onDelete('cascade');
-            $table->foreignId('programa_id')->constrained()->onDelete('cascade'); // Relación con la tabla programa
+            $table->foreignId('programas_id')->constrained()->onDelete('cascade'); // Relación con la tabla programa
             $table->timestamps();
         });
 
