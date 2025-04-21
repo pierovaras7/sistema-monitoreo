@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Admin\Asesores;
+use App\Livewire\Admin\Programas;
 use Illuminate\Support\Facades\Route;
 
 Route::view('dashboard', 'dashboard')
@@ -15,4 +16,5 @@ require __DIR__.'/auth.php';
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/asesores', Asesores::class)->name('admin.asesores');
+    Route::get('/admin/programas', Programas::class)->name('admin.programas');
 });
