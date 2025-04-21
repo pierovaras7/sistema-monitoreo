@@ -29,7 +29,7 @@ new class extends Component
     class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto px-4 sm:px-6 lg:px-48">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
@@ -38,6 +38,7 @@ new class extends Component
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-white" />
                     </a>
                 </div>
+                
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -51,18 +52,27 @@ new class extends Component
                     </x-nav-link>
                 </div>
                 
-                @role('admin')
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link
-                            :href="route('admin.asesores')"
-                            :active="request()->routeIs('admin.asesores')"
-                            wire:navigate
-                            class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
-                        >
-                            {{ __('Asesores') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
-                        </x-nav-link>
-                    </div>
-                @endrole
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link
+                        :href="route('admin.asesores')"
+                        :active="request()->routeIs('admin.asesores')"
+                        wire:navigate
+                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                    >
+                        {{ __('Asesores') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link
+                        :href="route('admin.programas')"
+                        :active="request()->routeIs('admin.programas')"
+                        wire:navigate
+                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                    >
+                        {{ __('Programas') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                    </x-nav-link>
+                </div>
 
             </div>
 

@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-px {
+    padding-left: 46px;
+    padding-right: 46px;
+  }
+  
+  @media (min-width: 640px) {
+    .custom-px {
+      padding-left: 120px;
+      padding-right: 120px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .custom-px {
+      padding-left: 220px;
+      padding-right: 220px;
+    }
+  }
+  
