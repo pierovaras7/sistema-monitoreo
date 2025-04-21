@@ -18,12 +18,12 @@ class Institucion extends Model
      // Relación con la tabla Aula
     public function aulas()
     {
-        return $this->hasMany(Aula::class, 'instituciones_id');
+        return $this->hasMany(Aula::class);
     }
 
     // Relación con la tabla Asesor
     public function asesores()
     {
-        return $this->hasMany(Asesor::class, 'instituciones_id');
+        return $this->hasMany(Asesor::class);
     }
 }

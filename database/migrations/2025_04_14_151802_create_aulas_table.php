@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('aulas', function (Blueprint $table) {
             $table->id();
             $table->string('codigo')->unique(); // Aseguramos que el código sea único
-            $table->foreignId('instituciones_id')->constrained()->onDelete('cascade');
             $table->foreignId('asesores_id')->constrained()->onDelete('cascade');
             $table->foreignId('programas_id')->constrained()->onDelete('cascade'); // Relación con la tabla programa
             $table->timestamps();

@@ -26,7 +26,7 @@
         <!-- Page Heading -->
         @if (isset($header))
             <header class="bg-white shadow">
-                <div class="mx-auto py-6 px-12 sm:px-32 lg:px-64">
+                <div class="custom-px mx-auto py-6">
                     {{ $header }}
                 </div>
             </header>
@@ -41,6 +41,6 @@
     <!-- Livewire scripts -->
     @livewireScripts
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-
+    
 </body>
 </html>

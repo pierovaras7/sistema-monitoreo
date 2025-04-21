@@ -3,21 +3,27 @@
 @tailwind utilities;
 
 .custom-px {
-    padding-left: 46px;
-    padding-right: 46px;
-  }
+    padding-left: 24px;
+    padding-right: 24px;
+}
   
-  @media (min-width: 640px) {
+@media (min-width: 640px) {
     .custom-px {
-      padding-left: 120px;
-      padding-right: 120px;
+        padding-left: 60px;
+        padding-right: 60px;
     }
-  }
-  
-  @media (min-width: 768px) {
+}
+
+@media (min-width: 768px) {
     .custom-px {
-      padding-left: 220px;
-      padding-right: 220px;
+        padding-left: 130px;
+        padding-right: 130px;
     }
-  }
-  
+}
+
+@media (min-width: 1024px) {
+    .custom-px {
+        padding-left: 220px;
+        padding-right: 220px;
+    }
+}
