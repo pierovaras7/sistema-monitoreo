@@ -69,6 +69,13 @@ class Programas extends Component
 
     }
 
+    public function abrirModal(){
+
+        $this->limpiar();
+        $this->modoEdicion=false;
+        $this->modalPrograma=true;
+    }
+
 
     public function editar($id)
     {
