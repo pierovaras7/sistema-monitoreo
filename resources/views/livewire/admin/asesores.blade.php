@@ -40,7 +40,9 @@
         <!-- Modal -->
         <div x-show="modalAsesor" x-transition
             class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50"
-            style="display: none;" @keydown.escape.window="modalAsesor = false" @click.self="modalAsesor = false">
+            style="display: none;" @keydown.escape.window="modalAsesor = false" 
+            {{-- @click.self="modalAsesor = false" --}}
+            >
             <div class="relative p-4 w-full max-w-md max-h-full">
                 <!-- Modal content -->
                 <div wire:key="asesor-form-{{ $modoEdicion ? 'edit' : 'add' }}"
