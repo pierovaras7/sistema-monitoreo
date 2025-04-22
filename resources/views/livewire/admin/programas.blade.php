@@ -206,10 +206,12 @@
                                     <!-- Modal de Confirmación de Eliminación -->
                                     <div 
                                         x-show="showModal" 
-                                        x-transition 
+                                        x-transition
+                                        @keydown.escape.window="showModal = false"
                                         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
                                     >
-                                        <div @click.away="showModal = false" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 w-full max-w-md">
+                                        <div @click.away="showModal = false"                                                 
+                                        class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 w-full max-w-md">
                                             <button 
                                                 type="button" 
                                                 @click="showModal = false"
