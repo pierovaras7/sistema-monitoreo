@@ -27,11 +27,32 @@ class Instituciones extends Component
         return view('livewire.admin.instituciones', compact('instituciones'));
     }
 
+    // Reglas de validación y mensajes personalizados en un solo lugar
+    public function rules()
+    {
+        return [
+            'nombre' => 'required|string|max:255',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'nombre.required' => 'El nombre de la instituciòn es obligatorio.',
+            'nombre.string' => 'El nombre de la instituciòn debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre de la instituciòn no debe exceder los 255 caracteres.',
+        ];
+    }
+
+    // Método único para validar cualquier campo actualizado
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
     public function guardar()
     {
-        $this->validate([
-            'nombre' => 'required|string|max:255',
-        ]);
+        $this->validate();
 
         $data = $this->only(['nombre']);
 
@@ -53,20 +74,28 @@ class Instituciones extends Component
         $this->reset(['nombre']);
     }
 
-    public function abrirModal(){
-
+    public function abrirModalAgregar()
+    {
+        $this->resetErrorBag();
         $this->limpiar();
-        $this->modoEdicion=false;
-        $this->modalInstitucion=true;
+        $this->modoEdicion = false;
+        $this->modalInstitucion = true; // si estás usando una propiedad para el modal
     }
 
     public function editar($id)
     {
+        $this->resetErrorBag();
         $institucion = Institucion::findOrFail($id);
         $this->institucionId = $institucion->id;
         $this->nombre = $institucion->nombre;
 
         $this->modoEdicion = true;
+    }
+
+    public function confirmarEliminacion($id)
+    {
+        $this->institucionId = $id;
+        $this->modalInstitucion = true; // Abrir el modal
     }
 
     public function eliminar($id)
