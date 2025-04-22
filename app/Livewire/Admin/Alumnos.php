@@ -21,16 +21,44 @@ class Alumnos extends Component
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(15);
 
-        return view('livewire.admin.alumnos',compact('alumnos'));
+        return view('livewire.admin.alumnos', compact('alumnos'));
+    }
+
+    public function rules()
+    {
+        return [
+            'nombre' => 'required|string|max:255',
+            'dni' => 'required|string|size:8', // asumiendo que el DNI tiene 8 caracteres
+            'telefono' => 'required|string|max:15', // puedes ajustar el max según tu caso
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.string' => 'El nombre debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre no debe exceder los 255 caracteres.',
+
+            'dni.required' => 'El DNI es obligatorio.',
+            'dni.string' => 'El DNI debe ser una cadena de texto.',
+            'dni.size' => 'El DNI debe tener exactamente 8 caracteres.',
+
+            'telefono.required' => 'El teléfono es obligatorio.',
+            'telefono.string' => 'El teléfono debe ser una cadena de texto.',
+            'telefono.max' => 'El teléfono no debe exceder los 15 caracteres.',
+        ];
+    }
+
+    // Método único para validar cualquier campo actualizado
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
     }
 
     public function guardar()
     {
-        $this->validate([
-            'nombre' => 'required|string|max:255',
-            'dni' => 'required|string|max:8',
-            'telefono' => 'required|string|max:9',
-        ]);
+        $this->validate();
 
         $data = $this->only(['nombre', 'dni', 'telefono']);
 
@@ -47,12 +75,12 @@ class Alumnos extends Component
         $this->dispatch('alumno-changed', 'Alumno guardado con éxito!');
     }
 
-    public function abrirModal()
+    public function abrirModalAgregar()
     {
-
+        $this->resetErrorBag();
         $this->limpiar();
         $this->modoEdicion = false;
-        $this->modalAlumno = true;
+        $this->modalAlumno = true; // si estás usando una propiedad para el modal
     }
 
 
@@ -64,6 +92,12 @@ class Alumnos extends Component
         $this->dni = $alumno->dni;
         $this->telefono = $alumno->telefono;
         $this->modoEdicion = true;
+    }
+
+    public function confirmarEliminacion($id)
+    {
+        $this->alumnoId = $id;
+        $this->modalAlumno = true; // Abrir el modal
     }
 
     public function eliminar($id)
