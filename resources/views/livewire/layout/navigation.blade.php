@@ -65,6 +65,17 @@ new class extends Component
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link
+                        :href="route('admin.alumnos')"
+                        :active="request()->routeIs('admin.alumnos')"
+                        wire:navigate
+                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                    >
+                        {{ __('Alumnos') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link
                         :href="route('admin.instituciones')"
                         :active="request()->routeIs('admin.instituciones')"
                         wire:navigate

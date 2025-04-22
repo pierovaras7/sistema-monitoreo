@@ -12,6 +12,8 @@ class Alumno extends Model
     // Atributos que pueden ser asignados masivamente
     protected $fillable = [
         'nombre',
+        'dni',
+        'telefono',
         'aula_id',
     ];
 
