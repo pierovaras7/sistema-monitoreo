@@ -10,9 +10,9 @@
         x-on:programa-changed.window="modalPrograma = false; showNotification = true; clearTimeout(timeout); timeout = setTimeout(() => showNotification = false, 3000)">        
         <div class="flex flex-col sm:flex-row sm:space-x-4">
             <!-- Botón para abrir el modal -->
-            <button @click="modalPrograma = true"
-            wire:click="abrirModal"
-                class="my-5 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-1/6 flex items-center justify-center space-x-2" 
+            <button 
+                @click="$wire.call('abrirModalAgregar').then(() => modalPrograma = true)"
+                class="my-5 block text-white text-xsmd:text-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-1/6 flex items-center justify-center space-x-2" 
                 type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -38,11 +38,11 @@
             class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50"
             style="display: none;"
             @keydown.escape.window="modalPrograma = false"
-            @click.self="modalPrograma = false"        
+            @click.self="modalPrograma = false"   
             >
             <div class="relative p-4 w-full max-w-md max-h-full">
                 <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                <div wire:key="programa-form-{{ $modoEdicion ? 'edit' : 'add' }}" class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
                     <!-- Modal header -->
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -56,43 +56,59 @@
                         </button>
                     </div>
                     <!-- Modal body -->
-                    <form class="p-4 md:p-5" wire:submit.prevent="guardar">
+                    <form class="p-4 md:p-5" wire:submit.prevent="guardar" x-data="{ showError: false }">
                         <div class="grid gap-4 mb-4 grid-cols-2">
                             <div class="col-span-2">
                                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                                <input wire:model.defer="nombre" type="nombre" name="nombre" id="nombre" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Ingrese el nombre del programa." required="">
+                                <input wire:model.live="nombre" type="nombre" name="nombre" id="nombre" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Ingrese el nombre del programa.">
+                                 @error('nombre') <span class="text-red-600 text-xs">{{ $message }}</span> @enderror
+
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="fecha_inicio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha Inicio</label>
-                                <input wire:model.defer="fecha_inicio" type="date" id="fecha_inicio" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <input wire:model.live="fecha_inicio" type="date" id="fecha_inicio" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                @error('fecha_inicio') 
+                                    <span class="text-red-600 text-xs">{{ $message }}</span> 
+                                @enderror
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="fecha_fin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha Fin</label>
-                                <input wire:model.defer="fecha_fin" type="date" id="fecha_fin" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <input wire:model.live="fecha_fin" type="date" id="fecha_fin" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                @error('fecha_fin') 
+                                    <span class="text-red-600 text-xs">{{ $message }}</span> 
+                                @enderror
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label for="periodo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Periodo</label>
-                                <select wire:model.defer="periodo" id="periodo" name="periodo" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option selected>Elige un periodo</option>
+                                <select wire:model.live="periodo" id="periodo" name="periodo" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="">Elige un periodo</option>
                                     @foreach ($periodos as $p)
                                         <option value="{{ $p }}">{{ $p }}</option>
                                     @endforeach                            
                                 </select>
+                                @error('periodo')
+                                    <span class="text-red-600 text-xs">{{ $message }}</span> 
+                                @enderror
                             </div>
-                            <div class="col-span-2 sm:col-span-1">
-                                <label for="instituciones_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Institucion</label>
-                                <select wire:model.defer="instituciones_id" id="instituciones_id" name="instituciones_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option selected>Elige una institucion</option>
-                                    @foreach ($instituciones as $inst)
-                                            <option value="{{ $inst->id }}">{{ $inst->nombre }}</option>
-                                        @endforeach                            
+                            <!-- Campo Institución -->
+                            <div>
+                                <label for="instituciones_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Institución</label>
+                                <select wire:model.live="instituciones_id" id="instituciones_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="">Elige una Institución</option>
+                                    @foreach($instituciones as $institucion)
+                                        <option value="{{ $institucion->id }}">{{ $institucion->nombre }}</option>
+                                    @endforeach
                                 </select>
+
+                                @error('instituciones_id')
+                                    <span class="text-red-600 text-xs">{{ $message }}</span> 
+                                @enderror
                             </div>
                         </div>
                         <div class="flex justify-end">
                             <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                                {{ $modoEdicion ? 'Guardar' : 'Actualizar' }}
+                                {{ $modoEdicion ? 'Actualizar' : 'Guardar' }}
                             </button>
                         </div>
                     </form>
@@ -161,8 +177,7 @@
                             <td class="px-6 py-4 flex items-center gap-3 justify-center">
                                 <!-- Botón Editar -->
                                 <button 
-                                    wire:click="editar({{ $prog->id }})" 
-                                    @click="modalPrograma = true"
+                                    @click="$wire.call('editar', {{ $prog->id }}).then(() => modalPrograma = true)"
                                     class="text-blue-600 dark:text-blue-500 hover:text-blue-700"
                                     title="Editar"
                                 >
@@ -172,17 +187,59 @@
                                 </button>
 
                                 <!-- Botón Eliminar -->
-                                <button 
-                                    wire:click="eliminar({{ $prog->id }})"
-                                    class="text-red-600 dark:text-red-500 hover:text-red-700"
-                                    title="Eliminar"
+                                <!-- Botón de Mostrar Confirmación -->
+                                <div 
+                                    x-data="{ showModal: false }" 
+                                    class="flex justify-center"
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                    </svg>
-                                </button>
-                            </td>
+                                    <!-- Botón que abre el modal -->
+                                    <button 
+                                        @click="showModal = true" 
+                                        class="block bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                        type="button"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                    </button>
 
+                                    <!-- Modal de Confirmación de Eliminación -->
+                                    <div 
+                                        x-show="showModal" 
+                                        x-transition
+                                        @keydown.escape.window="showModal = false"
+                                        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                                    >
+                                        <div @click.away="showModal = false"                                                 
+                                        class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 w-full max-w-md">
+                                            <button 
+                                                type="button" 
+                                                @click="showModal = false"
+                                                class="absolute top-2 right-2 text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                                            >
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293..." clip-rule="evenodd" /></svg>
+                                            </button>
+                                            <p class="mb-4 text-gray-500 dark:text-gray-300 text-center">¿Estás seguro de eliminar este registro?</p>
+
+                                            <div class="flex justify-center gap-4">
+                                                <button 
+                                                    @click="showModal = false"
+                                                    class="py-2 px-3 text-sm font-medium text-gray-500 bg-white border rounded-lg hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300"
+                                                >
+                                                    No, cancelar
+                                                </button>
+                                                <button 
+                                                    wire:click="eliminar({{ $prog->id }})" 
+                                                    @click="showModal = false"
+                                                    class="py-2 px-3 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 dark:bg-red-500"
+                                                >
+                                                    Sí, estoy seguro
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
