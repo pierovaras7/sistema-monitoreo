@@ -31,7 +31,7 @@ class Instituciones extends Component
     public function rules()
     {
         return [
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255|regex:/^[\pL\s]+$/u',
         ];
     }
 
@@ -41,6 +41,7 @@ class Instituciones extends Component
             'nombre.required' => 'El nombre de la instituciòn es obligatorio.',
             'nombre.string' => 'El nombre de la instituciòn debe ser una cadena de texto.',
             'nombre.max' => 'El nombre de la instituciòn no debe exceder los 255 caracteres.',
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
         ];
     }
 

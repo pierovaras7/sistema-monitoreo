@@ -47,7 +47,7 @@ class Asesores extends Component
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255||regex:/^[\pL\s]+$/u',
             'email' => 'required|email|max:255',
             'dni' => 'required|string|size:8|regex:/^[0-9]+$/', // Asumiendo DNI de 8 dígitos
             'telefono' => 'required|string|max:15|regex:/^[0-9]+$/', // Puedes ajustar el max según tus necesidades
@@ -60,6 +60,7 @@ class Asesores extends Component
             'name.required' => 'El nombre es obligatorio.',
             'name.string' => 'El nombre debe ser una cadena de texto.',
             'name.max' => 'El nombre no debe exceder los 255 caracteres.',
+            'name.regex' => 'El nombre solo debe contener letras y espacios.',
 
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.email' => 'Debe proporcionar un correo electrónico válido.',
