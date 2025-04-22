@@ -43,14 +43,50 @@ class Asesores extends Component
         return view('livewire.admin.asesores', compact('asesores'));
     }
 
+    // Reglas de validación y mensajes personalizados en un solo lugar
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'dni' => 'required|string|size:8|regex:/^[0-9]+$/', // Asumiendo DNI de 8 dígitos
+            'telefono' => 'required|string|max:15|regex:/^[0-9]+$/', // Puedes ajustar el max según tus necesidades
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.string' => 'El nombre debe ser una cadena de texto.',
+            'name.max' => 'El nombre no debe exceder los 255 caracteres.',
+
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'Debe proporcionar un correo electrónico válido.',
+            'email.max' => 'El correo electrónico no debe exceder los 255 caracteres.',
+
+            'dni.required' => 'El DNI es obligatorio.',
+            'dni.string' => 'El DNI debe ser una cadena de texto.',
+            'dni.size' => 'El DNI debe tener exactamente 8 caracteres.',
+            'dni.regex' => 'El DNI solo debe contener números.',
+
+            'telefono.required' => 'El teléfono es obligatorio.',
+            'telefono.string' => 'El teléfono debe ser una cadena de texto.',
+            'telefono.max' => 'El teléfono no debe exceder los 15 caracteres.',
+            'telefono.regex' => 'El teléfono solo debe contener números.',
+        ];
+    }
+
+
+    // Método único para validar cualquier campo actualizado
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
     public function guardar()
     {
-        $this->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255|email',
-            'dni' => 'required|string|string|max:255',
-            'telefono' => 'required|string|string|max:255',
-        ]);
+        $this->validate();
 
         if ($this->modoEdicion) {
             $asesor = Asesor::with('user')->find($this->asesorId);
@@ -91,17 +127,18 @@ class Asesores extends Component
     }
 
 
-    public function abrirModal()
+    public function abrirModalAgregar()
     {
-
+        $this->resetErrorBag();
         $this->limpiar();
         $this->modoEdicion = false;
-        $this->modalAsesor = true;
+        $this->modalAsesor = true; // si estás usando una propiedad para el modal
     }
 
 
     public function editar($id)
     {
+        $this->resetErrorBag();
         $asesor = Asesor::findOrFail($id);
         $this->asesorId = $asesor->id;
         $this->name = $asesor->user->name;
@@ -110,6 +147,13 @@ class Asesores extends Component
         $this->telefono = $asesor->telefono;
         $this->modoEdicion = true;
     }
+
+    public function confirmarEliminacion($id)
+    {
+        $this->asesorId = $id;
+        $this->modalAsesor = true; // Abrir el modal
+    }
+
 
     public function eliminar($id)
     {
