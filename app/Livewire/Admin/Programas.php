@@ -20,7 +20,6 @@ class Programas extends Component
     public $sortDirection = 'asc'; // Ascendente por defecto
 
 
-
     public function mount()
     {
         
@@ -42,16 +41,51 @@ class Programas extends Component
         return view('livewire.admin.programas', compact('programas'));
     }
 
-
-    public function guardar()
+    // Reglas de validación y mensajes personalizados en un solo lugar
+    public function rules()
     {
-        $this->validate([
+        return [
             'nombre' => 'required|string|max:255',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
             'periodo' => 'required|string|max:255',
             'instituciones_id' => 'required|exists:instituciones,id',
-        ]);
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'nombre.required' => 'El nombre del programa es obligatorio.',
+            'nombre.string' => 'El nombre del programa debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre del programa no debe exceder los 255 caracteres.',
+            
+            'fecha_inicio.required' => 'La fecha de inicio es obligatoria.',
+            'fecha_inicio.date' => 'La fecha de inicio debe ser una fecha válida.',
+            
+            'fecha_fin.required' => 'La fecha de finalización es obligatoria.',
+            'fecha_fin.date' => 'La fecha de finalización debe ser una fecha válida.',
+            'fecha_fin.after_or_equal' => 'La fecha de finalización debe ser igual o posterior a la fecha de inicio.',
+            
+            'periodo.required' => 'El periodo es obligatorio.',
+            'periodo.string' => 'El periodo debe ser una cadena de texto.',
+            'periodo.max' => 'El periodo no debe exceder los 255 caracteres.',
+            
+            'instituciones_id.required' => 'La institución es obligatoria.',
+            'instituciones_id.exists' => 'La institución seleccionada no es válida.',
+        ];
+    }
+
+    // Método único para validar cualquier campo actualizado
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+
+    public function guardar()
+    {
+        $this->validate();
 
         $data = $this->only(['nombre', 'fecha_inicio', 'fecha_fin', 'periodo', 'instituciones_id']);
 
@@ -69,9 +103,17 @@ class Programas extends Component
 
     }
 
+    public function abrirModalAgregar()
+    {
+        $this->resetErrorBag();
+        $this->limpiar();
+        $this->modoEdicion = false;
+        $this->modalPrograma = true; // si estás usando una propiedad para el modal
+    }
 
     public function editar($id)
     {
+        $this->resetErrorBag();
         $programa = Programa::findOrFail($id);
         $this->programaId = $programa->id;
         $this->instituciones_id = $programa->instituciones_id;
@@ -79,7 +121,16 @@ class Programas extends Component
         $this->fecha_inicio = Carbon::parse($programa->fecha_inicio)->format('Y-m-d');
         $this->fecha_fin = Carbon::parse($programa->fecha_fin)->format('Y-m-d');
         $this->periodo = $programa->periodo;
+       
+        // Cambiar a modo de edición
         $this->modoEdicion = true;
+
+    }
+
+    public function confirmarEliminacion($id)
+    {
+        $this->programaId = $id;
+        $this->modalPrograma = true; // Abrir el modal
     }
 
     public function eliminar($id)
@@ -97,6 +148,8 @@ class Programas extends Component
         // Limpiar datos si es necesario (opcional)
         $this->dispatch('programa-changed', '¡Programa eliminado con éxito!');
     }
+
+   
 
 
     public function limpiar()
