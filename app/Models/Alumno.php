@@ -12,12 +12,16 @@ class Alumno extends Model
     // Atributos que pueden ser asignados masivamente
     protected $fillable = [
         'nombre',
+        'dni',
+        'telefono',
         'aula_id',
     ];
 
     public function aulas()
     {
-        return $this->belongsToMany(Aula::class, 'alumno_aula');
+        return $this->belongsToMany(Aula::class, 'alumno_aula','alumno_id', 'aula_id');
     }
+
+    
 
 }

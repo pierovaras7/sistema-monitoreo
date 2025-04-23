@@ -2,13 +2,22 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Alumno;
+use App\Models\AlumnoAula;
 use App\Models\Aula;
 use App\Models\Sesion;
 use Livewire\Component;
 
 class DetalleAula extends Component
 {
-    public $aulaId;
+    public $aulaId, $nombre, $dni, $telefono, $alumnoId;
+    public $modoEdicionAlumno = false;
+    public $modalAlumno;
+    public string $search = '';
+    public $sortField = 'nombre'; // Por defecto, ordenamos por nombre
+    public $sortDirection = 'asc'; // Ascendente por defecto
+
+
 
     // Propiedades para sesiones
     public $titulo, $fecha_inicio, $fecha_fin, $modalSesion = false;
@@ -17,9 +26,143 @@ class DetalleAula extends Component
     {
         $this->aulaId = $aulaId;
     }
-    
-    public function render()
+
+
+        public function render()
     {
+        $alumnos = Alumno::where('nombre', 'like', '%' . $this->search . '%')
+            ->where('active', true)
+            ->whereHas('aulas', function ($query) {
+                $query->where('aula_id', $this->aulaId);
+            })
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate(15);
+
+        $aula = Aula::with(['sesiones' => function ($query) {
+            $query->orderBy('fecha_inicio', 'desc');
+        }])->findOrFail($this->aulaId);
+
+        return view('livewire.admin.detalle-aula', compact('alumnos', 'aula'));
+    }
+
+
+
+
+    protected $rulesAlumno = [
+        'nombre' => 'required|string|max:255|regex:/^[\pL\s]+$/u',
+        'dni' => 'required|string|size:8|regex:/^[0-9]+$/', // asumiendo que el DNI tiene 8 caracteres
+        'telefono' => 'required|string|max:15|regex:/^[0-9]+$/', // puedes ajustar el max según tu caso
+    ];
+
+    protected $messagesAlumno = [
+        'nombre.required' => 'El nombre es obligatorio.',
+        'nombre.string' => 'El nombre debe ser una cadena de texto.',
+        'nombre.max' => 'El nombre no debe exceder los 255 caracteres.',
+        'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
+
+        'dni.required' => 'El DNI es obligatorio.',
+        'dni.string' => 'El DNI debe ser una cadena de texto.',
+        'dni.size' => 'El DNI debe tener exactamente 8 caracteres.',
+        'dni.regex' => 'El DNI solo debe contener números.',
+
+        'telefono.required' => 'El teléfono es obligatorio.',
+        'telefono.string' => 'El teléfono debe ser una cadena de texto.',
+        'telefono.max' => 'El teléfono no debe exceder los 15 caracteres.',
+        'telefono.regex' => 'El teléfono solo debe contener números.',
+    ];
+
+    public function updatedAlumno($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+    public function guardarAlumno()
+    {
+        $this->validate($this->rulesAlumno, $this->messagesAlumno);
+
+        $data = $this->only(['nombre', 'dni', 'telefono']);
+
+        if ($this->modoEdicionAlumno) {
+            $alumno = Alumno::find($this->alumnoId);
+            $alumno->update($data);
+            session()->flash('message', 'Alumno actualizado correctamente.');
+        } else {
+            $alumno = Alumno::create($data);
+
+            $dataAlumnoAula = [
+                'alumno_id' => $alumno->id,
+                'aula_id' => $this->aulaId,
+            ];
+
+            AlumnoAula::create($dataAlumnoAula);
+
+            session()->flash('message', 'Alumno creado correctamente.');
+        }
+
+
+        $this->limpiarAlumno();
+        $this->dispatch('alumno-changed', 'Alumno guardado con éxito!');
+    }
+
+    public function abrirModalAgregarAlumno()
+    {
+        $this->resetErrorBag();
+        $this->limpiarAlumno();
+        $this->modoEdicionAlumno = false;
+        $this->modalAlumno = true; // si estás usando una propiedad para el modal
+    }
+
+
+    public function editarAlumno($id)
+    {
+        $alumno = Alumno::findOrFail($id);
+        $this->alumnoId = $alumno->id;
+        $this->nombre = $alumno->nombre;
+        $this->dni = $alumno->dni;
+        $this->telefono = $alumno->telefono;
+        $this->modoEdicionAlumno = true;
+    }
+
+    public function confirmarEliminacionAlumno($id)
+    {
+        $this->alumnoId = $id;
+        $this->modalAlumno = true; // Abrir el modal
+    }
+
+    public function eliminarAlumno($id)
+    {
+        // Elimina la relación en la tabla pivote
+        AlumnoAula::where('alumno_id', $id)
+            ->where('aula_id', $this->aulaId)
+            ->delete();
+
+        // Realiza el borrado lógico
+        $alumno = Alumno::findOrFail($id);
+        $alumno->active = false;
+        $alumno->save();
+
+        // Mensaje de notificación
+        session()->flash('message', 'Alumno eliminado correctamente.');
+
+        // Evento Livewire para actualizar vista
+        $this->dispatch('alumno-changed', 'Alumno eliminado con éxito!');
+    }
+
+    public function limpiarAlumno()
+    {
+        $this->reset(['nombre', 'dni', 'telefono']);
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            // Si el campo es el mismo, alterna la dirección
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            // Si el campo es diferente, establece la ordenación ascendente
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
         $aula = Aula::with(['sesiones' => function ($query) {
             $query->orderBy('fecha_inicio', 'desc');
         }])->findOrFail($this->aulaId);
