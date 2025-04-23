@@ -12,7 +12,7 @@
             <!-- Botón para abrir el modal -->
             <button 
                 @click="$wire.call('abrirModalAgregar').then(() => modalPrograma = true)"
-                class="my-5 block text-white text-xsmd:text-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-1/6 flex items-center justify-center space-x-2" 
+                class="my-5 block text-white text-xs md:text-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-1/6 flex items-center justify-center space-x-2" 
                 type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -174,11 +174,77 @@
                             <td class="px-6 py-4">
                                 {{ $prog->fecha_fin }}
                             </td>
-                            <td class="px-6 py-4 flex items-center gap-3 justify-center">
+                            <td class="px-6 py-4 flex items-center justify-center">
                                 <!-- Botón Editar -->
+                                <div 
+                                    x-data="{ showModalAulas: false }" 
+                                    class="flex justify-center"
+                                >
+                                    <!-- Botón que abre el modal -->
+                                    <button 
+                                        @click="$wire.call('verAulas', {{ $prog->id }}).then(() => showModalAulas = true)" 
+                                        class="block bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 text-green-600"
+                                        title="Ver Aulas"
+                                        type="button"
+                                    >
+                                        <!-- Icono de ojito -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12s-3.75 6.75-9.75 6.75S2.25 12 2.25 12z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Modal de Ver Aulas -->
+                                    <div 
+                                        x-show="showModalAulas" 
+                                        x-transition 
+                                        @keydown.escape.window="showModalAulas = false"
+                                        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                                        x-cloak
+                                    >
+                                        <div 
+                                            @click.away="showModalAulas = false"
+                                            class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 w-full max-w-md relative"
+                                        >
+                                            <!-- Botón cerrar -->
+                                            <button 
+                                                type="button" 
+                                                @click="showModalAulas = false"
+                                                class="absolute top-2 right-2 text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                                            >
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1..." clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+
+                                            <h2 class="text-lg font-semibold text-center mb-4 text-gray-900 dark:text-white">Aulas del Programa</h2>
+
+                                            <div class="space-y-2 max-h-60 overflow-y-auto">
+                                                @forelse ($prog->aulas as $aula)
+                                                    <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded shadow text-sm">
+                                                        <p class="text-gray-800 dark:text-white"><strong>Código:</strong> {{ $aula->codigo }}</p>
+                                                        <p class="text-gray-600 dark:text-gray-300"><strong>Asesor:</strong> {{ $aula->asesor->nombre ?? 'Sin asignar' }}</p>
+                                                    </div>
+                                                @empty
+                                                    <p class="text-gray-600 dark:text-gray-300 text-center">Este programa no tiene aulas asociadas.</p>
+                                                @endforelse
+                                            </div>
+
+                                            <div class="mt-4 flex justify-end">
+                                                <button 
+                                                    @click="showModalAulas = false" 
+                                                    class="py-2 px-4 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                                                >
+                                                    Cerrar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <button 
                                     @click="$wire.call('editar', {{ $prog->id }}).then(() => modalPrograma = true)"
-                                    class="text-blue-600 dark:text-blue-500 hover:text-blue-700"
+                                    class="block bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 text-blue-600"
                                     title="Editar"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -195,7 +261,7 @@
                                     <!-- Botón que abre el modal -->
                                     <button 
                                         @click="showModal = true" 
-                                        class="block bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                        class="block bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 text-red-600"
                                         type="button"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">

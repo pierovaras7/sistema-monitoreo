@@ -15,4 +15,10 @@ class Programa extends Model
     {
         return $this->belongsTo(Institucion::class, 'instituciones_id');
     }
+
+    public function aulas()
+    {
+        return $this->hasMany(Aula::class, 'programas_id')->where('active', true);
+    }
+
 }
