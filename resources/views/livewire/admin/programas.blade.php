@@ -120,11 +120,15 @@
         @if (session()->has('message'))
             <div x-show="showNotification"
                 x-transition
-                class="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50"
-                x-text="'{{ session('message') }}'"
-            ></div>
+                class="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center gap-2 z-50"
+            >
+                <!-- Ícono SVG de éxito -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2l4 -4M12 22c5.523 0 10 -4.477 10 -10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10z" />
+                </svg>
+                <span>{{ session('message') }}</span>
+            </div>
         @endif
-
         <div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg my-2">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 text-center">
