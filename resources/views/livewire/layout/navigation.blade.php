@@ -74,6 +74,17 @@ new class extends Component
                     </x-nav-link>
                 </div>
 
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link
+                        :href="route('admin.aulas')"
+                        :active="request()->routeIs('admin.aulas')"
+                        wire:navigate
+                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                    >
+                        {{ __('Aulas') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                    </x-nav-link>
+                </div>
+
             </div>
 
             <!-- Settings Dropdown -->

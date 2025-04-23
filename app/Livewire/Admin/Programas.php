@@ -32,11 +32,12 @@ class Programas extends Component
 
     public function render()
     {
-        $programas = Programa::with('institucion')
+        $programas = Programa::with(['institucion', 'aulas.asesor'])
                     ->where('nombre', 'like', '%' . $this->search . '%')
                     ->where('active', true)
-                    ->orderBy($this->sortField, $this->sortDirection) // Ordena por el campo y dirección especificada
+                    ->orderBy($this->sortField, $this->sortDirection)
                     ->paginate(15);
+
 
         return view('livewire.admin.programas', compact('programas'));
     }
@@ -149,7 +150,12 @@ class Programas extends Component
         $this->dispatch('programa-changed', '¡Programa eliminado con éxito!');
     }
 
-   
+    public $aulasDelPrograma = [];
+
+    public function verAulas($programaId)
+    {
+        $this->aulasDelPrograma = Programa::with('aulas.asesor')->find($programaId)?->aulas ?? [];
+    }
 
 
     public function limpiar()

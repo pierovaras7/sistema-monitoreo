@@ -12,13 +12,14 @@ class Aula extends Model
     // Atributos que se pueden asignar masivamente
     protected $fillable = [
         'codigo',         // El código del aula
-        'instituciones_id', // Relación con la tabla instituciones
+        'programas_id', // Relación con la tabla instituciones
         'asesores_id',    // Relación con la tabla asesores
+        'active'
     ];
 
-    public function institucion()
+    public function programa()
     {
-        return $this->belongsTo(Institucion::class, 'instituciones_id');
+        return $this->belongsTo(Programa::class, 'programas_id');
     }
 
     // Relación con el modelo Asesor
@@ -32,5 +33,4 @@ class Aula extends Model
         return $this->belongsToMany(Alumno::class, 'alumno_aula');
     }
 
-    
 }

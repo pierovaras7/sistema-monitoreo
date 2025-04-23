@@ -11,6 +11,7 @@ class Asesor extends Model
     // Atributos que pueden ser asignados masivamente
     protected $fillable = [
         'user_id', // Para la relación con la tabla 'users'
+        'nombre',
         'telefono',
         'dni',
     ];

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('asesores', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('telefono')->nullable();
             $table->string('dni')->unique();
