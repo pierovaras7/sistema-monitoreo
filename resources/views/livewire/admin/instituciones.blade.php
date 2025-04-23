@@ -7,7 +7,7 @@
     </x-slot>
     
     <div x-data="{ modalInstitucion: false, showNotification: false, timeout: null }" 
-        x-on:programa-changed.window="modalInstitucion = false; showNotification = true; clearTimeout(timeout); timeout = setTimeout(() => showNotification = false, 3000)">        
+        x-on:institucion-changed.window="modalInstitucion = false; showNotification = true; clearTimeout(timeout); timeout = setTimeout(() => showNotification = false, 3000)">        
         <div class="flex flex-col sm:flex-row sm:space-x-4">
             <!-- Botón para abrir el modal -->
             <button 
@@ -176,9 +176,9 @@
                 </tbody>
             </table>
             <!-- Paginación -->
-            @if($institucion->count() > 15)
+            @if($instituciones->count() > 15)
                 <div class="p-4">
-                    {{ $institucion->links() }}
+                    {{ $instituciones->links() }}
                 </div>
             @endif
         </div>

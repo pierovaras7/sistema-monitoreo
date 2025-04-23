@@ -7,7 +7,7 @@
     </x-slot>
 
     <div x-data="{ modalAsesor: false, showNotification: false, timeout: null }"
-        x-on:programa-changed.window="modalAsesor = false; showNotification = true; clearTimeout(timeout); timeout = setTimeout(() => showNotification = false, 3000)">
+        x-on:asesor-changed.window="modalAsesor = false; showNotification = true; clearTimeout(timeout); timeout = setTimeout(() => showNotification = false, 3000)">
         <div class="flex flex-col sm:flex-row sm:space-x-4">
             <!-- Botón para abrir el modal -->
             <button @click="$wire.call('abrirModalAgregar').then(() => modalAsesor = true)"
