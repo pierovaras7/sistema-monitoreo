@@ -69,9 +69,6 @@ class Aulas extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
-        if ($propertyName === 'asesores_id') {
-            $this->validateOnly($propertyName);
-        }
     }
 
     public function guardar()

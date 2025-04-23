@@ -12,9 +12,9 @@ class Sesion extends Model
     // Atributos que se pueden asignar masivamente
     protected $fillable = [
         'titulo',
-        'fecha_hora',
+        'fecha_inicio',
+        'fecha_fin',
         'aula_id',
-        'user_id',
     ];
 
     // Relación con Aula

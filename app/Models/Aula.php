@@ -33,4 +33,9 @@ class Aula extends Model
         return $this->belongsToMany(Alumno::class, 'alumno_aula');
     }
 
+    public function sesiones()
+    {
+        return $this->hasMany(Sesion::class, 'aula_id');
+    }
+
 }

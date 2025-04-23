@@ -38,7 +38,6 @@ class Programas extends Component
                     ->orderBy($this->sortField, $this->sortDirection)
                     ->paginate(15);
 
-
         return view('livewire.admin.programas', compact('programas'));
     }
 

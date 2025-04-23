@@ -17,10 +17,8 @@ return new class extends Migration
             $table->dateTime('fecha_inicio');
             $table->dateTime('fecha_fin');
             $table->foreignId('aula_id')->constrained()->onDelete('cascade');
-            $table->foreignId('asesores_id')->constrained()->onDelete('cascade'); // asesor
             $table->timestamps();
         });
-        
     }
 
     /**
