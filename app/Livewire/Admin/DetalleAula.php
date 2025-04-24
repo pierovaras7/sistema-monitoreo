@@ -29,7 +29,7 @@ class DetalleAula extends Component
     }
 
 
-        public function render()
+    public function render()
     {
         $alumnos = Alumno::where('nombre', 'like', '%' . $this->search . '%')
             ->where('active', true)
@@ -88,39 +88,44 @@ class DetalleAula extends Component
             $alumno->update($data);
             session()->flash('message', 'Alumno actualizado correctamente.');
         } else {
+            // Crear alumno
             $alumno = Alumno::create($data);
 
-            $dataAlumnoAula = [
+            // Relación con el aula
+            AlumnoAula::create([
                 'alumno_id' => $alumno->id,
                 'aula_id' => $this->aulaId,
-            ];
+            ]);
 
-            AlumnoAula::create($dataAlumnoAula);
+            // Registrar asistencias por sesiones pasadas
+            $this->registrarAsistenciasFaltantes($alumno);
 
-             // Obtener sesiones pasadas del aula
-        $sesiones = Sesion::where('aula_id', $this->aulaId)->get();
-
-        foreach ($sesiones as $sesion) {
-            // Verificar si ya existe una asistencia para este alumno y sesión
-            $existe = Asistencia::where('sesiones_id', $sesion->id)
-                                ->where('alumno_id', $alumno->id)
-                                ->exists();
-
-            if (!$existe) {
-                Asistencia::create([
-                    'sesiones_id' => $sesion->id,
-                    'alumno_id' => $alumno->id,
-                    'asistio' => 0, // Se registra como falta por defecto
-                ]);
-            }
+            session()->flash('message', 'Alumno creado correctamente y asistencias registradas.');
         }
-
-            session()->flash('message', 'Alumno creado correctamente.');
-        }
-
 
         $this->limpiarAlumno();
         $this->dispatch('alumno-changed', 'Alumno guardado con éxito!');
+    }
+
+    public function registrarAsistenciasFaltantes($alumno)
+    {
+        $sesionesPasadas = Sesion::where('aula_id', $this->aulaId)
+            ->where('fecha_fin', '<=', $alumno->created_at)
+            ->get();
+
+        foreach ($sesionesPasadas as $sesion) {
+            $yaExiste = Asistencia::where('sesiones_id', $sesion->id)
+                ->where('alumno_id', $alumno->id)
+                ->exists();
+
+            if (!$yaExiste) {
+                Asistencia::create([
+                    'sesiones_id' => $sesion->id,
+                    'alumno_id' => $alumno->id,
+                    'asistio' => 0, // Falta
+                ]);
+            }
+        }
     }
 
     public function abrirModalAgregarAlumno()
@@ -185,14 +190,14 @@ class DetalleAula extends Component
         $aula = Aula::with(['sesiones' => function ($query) {
             $query->orderBy('fecha_inicio', 'desc');
         }])->findOrFail($this->aulaId);
-        
+
         return view('livewire.admin.detalle-aula', [
             'aula' => $aula,
             'sesiones' => $aula->sesiones,
         ]);
     }
 
-    
+
     public function abrirModalSesion()
     {
         $this->resetErrorBag();
@@ -200,7 +205,7 @@ class DetalleAula extends Component
         $this->modalSesion = true; // si estás usando una propiedad para el modal
     }
 
-     // Reglas de validación para sesiones
+    // Reglas de validación para sesiones
     protected $rulesSesion = [
         'titulo' => 'required|string|max:255',
         'fecha_inicio' => 'required|date',
@@ -211,10 +216,10 @@ class DetalleAula extends Component
         'titulo.required' => 'El título de la sesión es obligatorio.',
         'titulo.string' => 'El título debe ser una cadena de texto.',
         'titulo.max' => 'El título no puede tener más de 255 caracteres.',
-    
+
         'fecha_inicio.required' => 'La fecha de inicio de la sesión es obligatoria.',
         'fecha_inicio.date' => 'La fecha de inicio debe ser una fecha válida.',
-    
+
         'fecha_fin.required' => 'La fecha de fin de la sesión es obligatoria.',
         'fecha_fin.date' => 'La fecha de fin debe ser una fecha válida.',
         'fecha_fin.after_or_equal' => 'La fecha de fin debe ser igual o posterior a la fecha de inicio.',
@@ -222,7 +227,7 @@ class DetalleAula extends Component
 
     public function guardarSesion()
     {
-        $this->validate($this->rulesSesion, $this->messagesSesion); 
+        $this->validate($this->rulesSesion, $this->messagesSesion);
 
         // Crear una nueva sesión asociada a la aula
         $sesion = new Sesion();
@@ -239,7 +244,6 @@ class DetalleAula extends Component
         session()->flash('message', 'La sesión se ha guardado exitosamente.');
 
         $this->dispatch('sesion-changed');
-
     }
 
     // Método para limpiar los campos de la sesión
@@ -249,5 +253,4 @@ class DetalleAula extends Component
         $this->fecha_inicio = '';
         $this->fecha_fin = '';
     }
-
 }
