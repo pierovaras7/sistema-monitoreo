@@ -353,7 +353,7 @@
 
             <div class="p-4" >
                 <ol class="relative border-s border-gray-200 dark:border-gray-700">                  
-                    @forelse ($sesiones as $sesion)
+                    @forelse ($aula->sesiones as $sesion)
                         <li class="mb-10 ms-4">
                             <div class="absolute w-3 h-3 bg-blue-500 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900"></div>
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">

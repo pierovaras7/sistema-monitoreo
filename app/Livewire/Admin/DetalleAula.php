@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Alumno;
 use App\Models\AlumnoAula;
+use App\Models\Asistencia;
 use App\Models\Aula;
 use App\Models\Sesion;
 use Livewire\Component;
@@ -95,6 +96,24 @@ class DetalleAula extends Component
             ];
 
             AlumnoAula::create($dataAlumnoAula);
+
+             // Obtener sesiones pasadas del aula
+        $sesiones = Sesion::where('aula_id', $this->aulaId)->get();
+
+        foreach ($sesiones as $sesion) {
+            // Verificar si ya existe una asistencia para este alumno y sesión
+            $existe = Asistencia::where('sesiones_id', $sesion->id)
+                                ->where('alumno_id', $alumno->id)
+                                ->exists();
+
+            if (!$existe) {
+                Asistencia::create([
+                    'sesiones_id' => $sesion->id,
+                    'alumno_id' => $alumno->id,
+                    'asistio' => 0, // Se registra como falta por defecto
+                ]);
+            }
+        }
 
             session()->flash('message', 'Alumno creado correctamente.');
         }
