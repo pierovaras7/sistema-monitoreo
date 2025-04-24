@@ -49,11 +49,22 @@ class DetalleAula extends Component
 
 
 
-    protected $rulesAlumno = [
-        'nombre' => 'required|string|max:255|regex:/^[\pL\s]+$/u',
-        'dni' => 'required|string|size:8|regex:/^[0-9]+$/', // asumiendo que el DNI tiene 8 caracteres
-        'telefono' => 'required|string|max:15|regex:/^[0-9]+$/', // puedes ajustar el max según tu caso
-    ];
+    protected function rulesAlumno()
+    {
+        $dniRule = 'required|string|size:8|regex:/^[0-9]+$/|unique:alumnos,dni';
+
+        if ($this->modoEdicionAlumno && $this->alumnoId) {
+            // Excluir el DNI actual del alumno en edición
+            $dniRule = 'required|string|size:8|regex:/^[0-9]+$/|unique:alumnos,dni,' . $this->alumnoId;
+        }
+
+        return [
+            'nombre' => 'required|string|max:255|regex:/^[\pL\s]+$/u',
+            'dni' => $dniRule,
+            'telefono' => 'required|string|max:15|regex:/^[0-9]+$/',
+        ];
+    }
+
 
     protected $messagesAlumno = [
         'nombre.required' => 'El nombre es obligatorio.',
@@ -65,6 +76,7 @@ class DetalleAula extends Component
         'dni.string' => 'El DNI debe ser una cadena de texto.',
         'dni.size' => 'El DNI debe tener exactamente 8 caracteres.',
         'dni.regex' => 'El DNI solo debe contener números.',
+        'dni.unique' => 'Este DNI ya está registrado en el sistema.',
 
         'telefono.required' => 'El teléfono es obligatorio.',
         'telefono.string' => 'El teléfono debe ser una cadena de texto.',
@@ -79,7 +91,7 @@ class DetalleAula extends Component
 
     public function guardarAlumno()
     {
-        $this->validate($this->rulesAlumno, $this->messagesAlumno);
+        $this->validate($this->rulesAlumno(), $this->messagesAlumno);
 
         $data = $this->only(['nombre', 'dni', 'telefono']);
 
