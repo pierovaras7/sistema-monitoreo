@@ -14,5 +14,12 @@ class Asistencia extends Model
         'sesiones_id',  // Relación con la tabla 'sesiones'
         'alumno_id',    // Relación con la tabla 'alumnos'
         'asistio',      // Información sobre si asistió o no
+        'observacion',  // Observaciones sobre la asistencia
     ];
+
+    public function alumno()
+    {
+        return $this->belongsTo(Alumno::class);
+    }
+
 }
