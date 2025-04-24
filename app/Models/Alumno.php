@@ -22,6 +22,9 @@ class Alumno extends Model
         return $this->belongsToMany(Aula::class, 'alumno_aula','alumno_id', 'aula_id');
     }
 
-    
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class);
+    }    
 
 }

@@ -397,7 +397,11 @@
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                                 {{ \Carbon\Carbon::parse($sesion->created_at)->translatedFormat('M Y') }}
                             </time>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $sesion->titulo }}</h3>
+                            <a href="{{ route('admin.detalle-sesion', $sesion->id) }}">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                    {{ $sesion->titulo }}
+                                </h3>
+                            </a>                            
                             <!-- Mostrar Fecha de Inicio y Fin -->
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500 block">
                                 Inicio: {{ \Carbon\Carbon::parse($sesion->fecha_inicio)->translatedFormat('d M Y - h:i A') }}

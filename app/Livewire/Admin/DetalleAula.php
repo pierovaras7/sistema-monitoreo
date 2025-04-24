@@ -241,7 +241,7 @@ class DetalleAula extends Component
     {
         $this->validate($this->rulesSesion, $this->messagesSesion);
 
-        // Crear una nueva sesión asociada a la aula
+        // Crear la sesión
         $sesion = new Sesion();
         $sesion->titulo = $this->titulo;
         $sesion->fecha_inicio = $this->fecha_inicio;
@@ -249,12 +249,24 @@ class DetalleAula extends Component
         $sesion->aula_id = $this->aulaId;
         $sesion->save();
 
-        // Cerrar el modal y resetear los campos
+        // Obtener los alumnos del aula
+        $aula = Aula::with('alumnos')->find($this->aulaId);
+
+        // Crear un registro de asistencia por cada alumno
+        foreach ($aula->alumnos as $alumno) {
+            Asistencia::create([
+                'sesiones_id' => $sesion->id,
+                'alumno_id' => $alumno->id,
+                'asistio' => false, // o null si lo llenan después
+                'observacion' => null,
+            ]);
+        }
+
+        // Cerrar modal, resetear y notificar
         $this->modalSesion = false;
         $this->reset(['titulo', 'fecha_inicio', 'fecha_fin']);
 
-        session()->flash('message', 'La sesión se ha guardado exitosamente.');
-
+        session()->flash('message', 'La sesión y asistencias se han creado correctamente.');
         $this->dispatch('sesion-changed');
     }
 

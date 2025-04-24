@@ -23,10 +23,10 @@ class Sesion extends Model
         return $this->belongsTo(Aula::class, 'aula_id');
     }
 
-    // Relación con User (asesor)
-    public function user()
+    // Relación con Asesor 
+    public function asesor()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Asesor::class, 'asesores_id');
     }
 
     // Relación con Asistencia
