@@ -1,8 +1,10 @@
 <?php
 
+use App\Livewire\Admin\Alumnos;
 use App\Livewire\Admin\Asesores;
 use App\Livewire\Admin\Aulas;
 use App\Livewire\Admin\DetalleAula;
+use App\Livewire\Admin\Instituciones;
 use App\Livewire\Admin\Programas;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +24,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/aulas', Aulas::class)->name('admin.aulas');
     Route::get('/admin/detalle-aula/{aulaId}', DetalleAula::class)->name('admin.detalle-aula');
 
+    Route::get('/admin/instituciones', Instituciones::class)->name('admin.instituciones');
+    Route::get('/admin/alumnos', Alumnos::class)->name('admin.alumnos');
 });

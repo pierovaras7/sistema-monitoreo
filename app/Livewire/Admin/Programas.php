@@ -45,7 +45,7 @@ class Programas extends Component
     public function rules()
     {
         return [
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255|regex:/^[\pL\s]+$/u',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
             'periodo' => 'required|string|max:255',
@@ -59,6 +59,7 @@ class Programas extends Component
             'nombre.required' => 'El nombre del programa es obligatorio.',
             'nombre.string' => 'El nombre del programa debe ser una cadena de texto.',
             'nombre.max' => 'El nombre del programa no debe exceder los 255 caracteres.',
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
             
             'fecha_inicio.required' => 'La fecha de inicio es obligatoria.',
             'fecha_inicio.date' => 'La fecha de inicio debe ser una fecha válida.',
