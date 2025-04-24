@@ -19,10 +19,29 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow p-6 mt-6 ">
-        <h3 class="text-lg font-bold mb-2">Datos del Aula</h3>
-        <p>Información detallada del aula aquí.</p>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mt-6">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 border-b pb-2">📘 Datos del Aula</h3>
+    
+        <div class="space-y-2 text-gray-700 dark:text-gray-300">
+            <div class="flex items-center gap-2">
+                <span class="font-medium text-gray-500 dark:text-gray-400">📚 Programa:</span>
+                <span class="text-base font-semibold">{{ $programaTitle }}</span>
+            </div>
+    
+            <div class="flex items-center gap-2">
+                <span class="font-medium text-gray-500 dark:text-gray-400">🧑‍🏫 Asesor:</span>
+                <span class="text-base font-semibold">{{ $asesorNombre }}</span>
+            </div>
+    
+            <!-- Fecha Inicio y Fin en una misma fila separadas por un guion -->
+            <div class="flex items-center gap-2">
+                <span class="font-medium text-gray-500 dark:text-gray-400">📅 Fechas:</span>
+                <span class="text-base font-semibold">{{ $fechaInicioPrograma }} hasta {{ $fechaFinPrograma }}</span>
+            </div>
+        </div>
     </div>
+    
+    
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-6">
         <div class="bg-white rounded-lg shadow p-6">

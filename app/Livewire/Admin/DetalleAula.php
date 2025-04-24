@@ -11,7 +11,7 @@ use Livewire\Component;
 
 class DetalleAula extends Component
 {
-    public $aulaId, $nombre, $dni, $telefono, $alumnoId;
+    public $aulaId, $nombre, $dni, $telefono, $alumnoId,$programaTitle,$asesorNombre,$fechaInicioPrograma,$fechaFinPrograma;
     public $modoEdicionAlumno = false;
     public $modalAlumno;
     public string $search = '';
@@ -26,6 +26,14 @@ class DetalleAula extends Component
     public function mount($aulaId)
     {
         $this->aulaId = $aulaId;
+
+    $aula = Aula::with(['asesor', 'programa'])->findOrFail($aulaId);
+
+    $this->programaTitle = $aula->programa->nombre ?? 'Sin programa';
+    $this->asesorNombre = $aula->asesor->nombre ?? 'Sin asesor';
+    $this->fechaInicioPrograma = $aula->programa->fecha_inicio ?? '-';
+    $this->fechaFinPrograma = $aula->programa->fecha_fin ?? '-';
+
     }
 
 

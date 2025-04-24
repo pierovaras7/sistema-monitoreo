@@ -1,7 +1,7 @@
 <div class="custom-px">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            SESION {{ $sesion->titulo }}
+            REGISTRO ASISTENCIA - {{ $sesion->titulo }}
         </h2>
     </x-slot>
 
