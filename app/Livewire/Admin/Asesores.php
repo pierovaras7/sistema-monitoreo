@@ -115,6 +115,7 @@ class Asesores extends Component
 
             Asesor::create([
                 'user_id' => $user->id,
+                'nombre' => $this->name,
                 'telefono' => $this->telefono,
                 'dni' => $this->dni,
                 'active' => true, // Si es necesario por tu lógica
