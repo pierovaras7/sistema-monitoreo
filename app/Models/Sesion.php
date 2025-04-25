@@ -15,6 +15,8 @@ class Sesion extends Model
         'fecha_inicio',
         'fecha_fin',
         'aula_id',
+        'link_reunion',
+        'link_asistencia',
     ];
 
     // Relación con Aula

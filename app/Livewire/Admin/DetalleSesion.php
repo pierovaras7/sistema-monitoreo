@@ -11,6 +11,8 @@ class DetalleSesion extends Component
     public $sesionId;
     public Sesion $sesion;
     public $titulo, $fecha_inicio, $fecha_fin, $link_reunion, $link_asistencia;
+    public $modalSesion = false;
+    public $modoEdicion = false;
 
     // Al montar el componente, obtenemos la sesión por su ID
     public function mount($sesionId)
@@ -24,6 +26,11 @@ class DetalleSesion extends Component
         $this->link_asistencia = $this->sesion->link_asistencia;
     }
 
+    // public function updated($propertyName)
+    // {
+    //     $this->validateOnly($propertyName);
+    // }
+
     // Método para actualizar la sesión
     public function actualizarSesion()
     {
@@ -33,6 +40,8 @@ class DetalleSesion extends Component
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
             'link_reunion' => 'nullable|url',
+        ], [
+            'link_reunion.url' => 'El enlace de reunión debe ser una URL válida. Ejemplo: https://tureunion.com',
         ]);
 
         // Actualizamos la sesión
@@ -45,11 +54,35 @@ class DetalleSesion extends Component
         ]);
 
         // Emitimos evento para cerrar el modal o notificar éxito
-        $this->dispatchBrowserEvent('cerrar-modal'); // Este evento puede ser usado para cerrar el modal en el frontend
+        $this->dispatch('cerrar-modal');
+        // Este evento puede ser usado para cerrar el modal en el frontend
 
         // Opcional: Mensaje flash de éxito
         session()->flash('success', 'La sesión se ha actualizado correctamente.');
     }
+
+    
+
+    public function abrirModalAgregar()
+    {
+        $this->resetErrorBag();
+        $this->modoEdicion = true;
+        $this->modalSesion = true;
+
+        // Cargar los datos actuales de la sesión
+        $this->titulo = $this->sesion->titulo;
+        $this->fecha_inicio = Carbon::parse($this->sesion->fecha_inicio)->format('Y-m-d\TH:i');
+        $this->fecha_fin = Carbon::parse($this->sesion->fecha_fin)->format('Y-m-d\TH:i');
+        $this->link_reunion = $this->sesion->link_reunion;
+        $this->link_asistencia = $this->sesion->link_asistencia;
+    }
+
+
+    public function limpiar()
+    {
+        $this->reset(['titulo', 'fecha_inicio', 'fecha_fin', 'link_reunion']);
+    }
+
 
     public function render()
     {
