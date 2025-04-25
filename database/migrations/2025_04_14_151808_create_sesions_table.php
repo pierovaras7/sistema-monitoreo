@@ -17,6 +17,9 @@ return new class extends Migration
             $table->dateTime('fecha_inicio');
             $table->dateTime('fecha_fin');
             $table->foreignId('aula_id')->constrained()->onDelete('cascade');
+            // Campos opcionales
+            $table->string('link_reunion')->nullable();
+            $table->string('link_asistencia')->nullable();
             $table->timestamps();
         });
     }

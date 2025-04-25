@@ -1,9 +1,71 @@
 <div class="custom-px">
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            SESION {{ $sesion->titulo }}
-        </h2>
+            <div class="flex flex-row justify-between items-center">
+                <h1 class="font-semibold text-3xl text-gray-800 leading-tight">
+                    {{ $sesion->titulo }} {{$titulo}}
+                </h1>
+                
+                    
+                <div x-data="{ open: false }"      x-on:abrir-modal.window="open = true"> <!-- Escuchar el evento 'abrir-modal' de Livewire -->
+
+    <!-- Título y botón de edición -->
+    <div class="flex flex-row justify-between items-center">
+        <h1 class="font-semibold text-3xl text-gray-800 leading-tight">
+            {{ $sesion->titulo }}
+        </h1>
+        <button @click="$wire.call('editar')" 
+                class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded-md shadow">
+            Editar
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div x-show="open" x-transition class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div @click.away="open = false"
+             class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-lg">
+            <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Editar Sesión</h2>
+            <form wire:submit.prevent="actualizarSesion">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-white">Título</label>
+                        <input type="text" wire:model="titulo"
+                               class="w-full mt-1 p-2 border rounded dark:bg-gray-700 dark:text-white" />
+                        @error('titulo') <span class="text-red-600 text-xs">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md shadow">
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+            </div>
+            
+    
+            <p class="text-md text-gray-600 my-2">
+                <b>Inicio: </b> {{ \Carbon\Carbon::parse($sesion->fecha_inicio)->format('d/m/Y H:i') }}
+            </p>
+            <p class="text-md text-gray-600 my-2">
+                <b>Fin: </b> {{ \Carbon\Carbon::parse($sesion->fecha_fin)->format('d/m/Y H:i') }}
+            </p>
+    
+            @if($sesion->link_reunion)
+                <!-- Aquí puedes mantener tu bloque del link con copiar -->
+                <div class="mt-2">[...Tu bloque de link con botón copiar aquí...]</div>
+            @endif            
+    
+        
+         
+        </div>
+        
+        </div>
     </x-slot>
+    
+    
 
     <!-- Notificación -->
     @if (session()->has('message'))
@@ -19,8 +81,11 @@
         </div>
     @endif
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg my-2">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 text-center">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight mt-8 mb-4 uppercase">
+        Detalle de Asistencia
+    </h2>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-gray-500 dark:text-gray-400 text-center">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th rowspan="2" class="px-4 py-3">#</th>
@@ -36,7 +101,7 @@
                         @endif --}}
                     </th>
                     <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('instituciones_id')">
-                        ALUMNO
+                        NOMBRE COMPLETO
                         {{-- @if($sortField === 'instituciones_id')
                             <span>{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif --}}

@@ -21,7 +21,7 @@ class DetalleAula extends Component
 
 
     // Propiedades para sesiones
-    public $titulo, $fecha_inicio, $fecha_fin, $modalSesion = false;
+    public $titulo, $fecha_inicio, $fecha_fin, $link_reunion, $link_asistencia, $modalSesion = false;
 
     public function mount($aulaId)
     {
@@ -222,6 +222,7 @@ class DetalleAula extends Component
         'titulo' => 'required|string|max:255',
         'fecha_inicio' => 'required|date',
         'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+        'link_reunion' => 'nullable|url',
     ];
 
     protected $messagesSesion = [
@@ -235,6 +236,9 @@ class DetalleAula extends Component
         'fecha_fin.required' => 'La fecha de fin de la sesión es obligatoria.',
         'fecha_fin.date' => 'La fecha de fin debe ser una fecha válida.',
         'fecha_fin.after_or_equal' => 'La fecha de fin debe ser igual o posterior a la fecha de inicio.',
+
+        'link_reunion.url' => 'El link de la reunión debe ser una URL válida. Ejemplo: https://meet.google.com',
+
     ];
 
     public function guardarSesion()
