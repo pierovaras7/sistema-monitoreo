@@ -8,6 +8,7 @@ use App\Models\Asistencia;
 use App\Models\Aula;
 use App\Models\Sesion;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class DetalleAula extends Component
 {
@@ -251,6 +252,8 @@ class DetalleAula extends Component
         $sesion->fecha_inicio = $this->fecha_inicio;
         $sesion->fecha_fin = $this->fecha_fin;
         $sesion->aula_id = $this->aulaId;
+        $sesion->link_reunion = $this->link_reunion;
+        $sesion->link_asistencia = Str::random(32); // Genera un token único
         $sesion->save();
 
         // Obtener los alumnos del aula
