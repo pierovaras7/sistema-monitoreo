@@ -13,7 +13,8 @@ class Aula extends Model
     protected $fillable = [
         'codigo',         // El código del aula
         'programas_id', // Relación con la tabla instituciones
-        'asesores_id',    // Relación con la tabla asesores
+        'asesores_id',
+        'seccion',    
         'active'
     ];
 

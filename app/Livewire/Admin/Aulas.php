@@ -13,7 +13,7 @@ class Aulas extends Component
 {
     use WithPagination;
 
-    public $codigo, $nombre, $asesores_id, $programas_id, $aulaId;
+    public $codigo, $nombre, $asesores_id, $programas_id, $aulaId,$seccion;
     public $asesores = [];
     public $programas = [];
     public $search = '';
@@ -75,7 +75,7 @@ class Aulas extends Component
     {
         $this->validate();
 
-        $data = $this->only(['codigo', 'asesores_id', 'programas_id']);
+        $data = $this->only(['codigo','seccion','asesores_id', 'programas_id']);
 
         if ($this->modoEdicion) {
             Aula::find($this->aulaId)->update($data);
@@ -115,6 +115,7 @@ class Aulas extends Component
         $this->aulaId = $aula->id;
         $this->codigo = $aula->codigo;
         $this->nombre = $aula->nombre;
+        $this->seccion=$aula->seccion;
         $this->asesores_id = $aula->asesores_id;
         $this->programas_id = $aula->programas_id;
         $this->modoEdicion = true;
@@ -133,7 +134,7 @@ class Aulas extends Component
 
     public function limpiar()
     {
-        $this->reset(['codigo', 'nombre', 'asesores_id', 'programas_id','aulaId', 'modoEdicion']);
+        $this->reset(['codigo', 'nombre','seccion', 'asesores_id', 'programas_id','aulaId', 'modoEdicion']);
     }
 
     public function sortBy($field)

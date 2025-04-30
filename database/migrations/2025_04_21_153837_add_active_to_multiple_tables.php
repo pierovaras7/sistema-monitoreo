@@ -31,6 +31,14 @@ class AddActiveToMultipleTables extends Migration
         Schema::table('sesiones', function (Blueprint $table) {
             $table->boolean('active')->default(true);
         });
+
+        Schema::table('programas', function (Blueprint $table) {
+            $table->string('mencion');
+        });
+
+        Schema::table('aulas', function (Blueprint $table) {
+            $table->string('seccion');
+        });
     }
 
     public function down()
@@ -57,6 +65,14 @@ class AddActiveToMultipleTables extends Migration
 
         Schema::table('sesiones', function (Blueprint $table) {
             $table->dropColumn('active');
+        });
+
+        Schema::table('programas', function (Blueprint $table) {
+            $table->dropColumn('mencion');
+        });
+
+        Schema::table('aulas', function (Blueprint $table) {
+            $table->dropColumn('seccion');
         });
     }
 }

@@ -81,7 +81,7 @@ new class extends Component
                         wire:navigate
                         class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
                     >
-                        {{ __('Instituciones') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                        {{ __('Universidades') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
                     </x-nav-link>
                 </div>
 

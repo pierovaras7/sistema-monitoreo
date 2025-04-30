@@ -83,7 +83,7 @@
                                         <template x-for="p in filtered" :key="p.id">
                                             <li @click="select(p.id)"
                                                 class="px-4 py-2 cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-600">
-                                                <span x-text="p.nombre" class="text-sm"></span>
+                                                <span x-text="p.nombre + ' - ' + p.mencion" class="text-sm"></span>
                                             </li>
                                         </template>
                                     </ul>
@@ -96,11 +96,22 @@
 
                             <div class="col-span-2">
                                 <label for="codigo"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Codigo</label>
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código</label>
                                 <input wire:model.live="codigo" type="codigo" name="codigo" id="codigo"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Ingrese el codigo del aula.">
+                                    placeholder="Ingrese el código del aula.">
                                 @error('codigo')
+                                    <span class="text-red-600 text-xs">{{ $message }}</span>
+                                @enderror
+
+                            </div>
+                            <div class="col-span-2">
+                                <label for="seccion"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sección</label>
+                                <input wire:model.live="seccion" type="text" name="seccion" id="seccion"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Ingrese la sección.">
+                                @error('seccion')
                                     <span class="text-red-600 text-xs">{{ $message }}</span>
                                 @enderror
 
@@ -172,14 +183,20 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('codigo')">
-                                CODIGO
+                                CÓDIGO DEL AULA
                                 @if ($sortField === 'codigo')
                                     <span>{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                                 @endif
                             </th>
                             <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('programas_id')">
-                                PROGRAMA
+                                PROGRAMA - MENCION
                                 @if ($sortField === 'programas_id')
+                                    <span>{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('seccion')">
+                                SECCIÓN
+                                @if ($sortField === 'seccion')
                                     <span>{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                                 @endif
                             </th>
@@ -207,7 +224,10 @@
                                     {{ $a->codigo }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    {{ $a->programa->nombre }}
+                                    {{ $a->programa->nombre }} - {{ $a->programa->mencion }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ $a->seccion }}
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ $a->asesor->nombre }}
@@ -342,7 +362,7 @@
             },
             get selectedName() {
                 const found = this.programas.find(p => p.id === this.selectedId);
-                return found ? found.nombre : 'Elige un programa';
+                return found ? `${found.nombre} - ${found.mencion}` : 'Elige un programa';
             }
         }
     }
