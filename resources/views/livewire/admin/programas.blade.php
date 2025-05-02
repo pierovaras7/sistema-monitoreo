@@ -294,6 +294,7 @@
                                     <!-- Modal de Confirmación de Eliminación -->
                                     <div 
                                         x-show="showModal" 
+                                        x-cloak
                                         x-transition
                                         @keydown.escape.window="showModal = false"
                                         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
@@ -334,11 +335,9 @@
                 </tbody>
             </table>
             <!-- Paginación -->
-            @if($programas->count() > 15)
-                <div class="p-4">
-                    {{ $programas->links() }}
-                </div>
-            @endif
+            <div class="p-4">
+                {{ $programas->links() }}
+            </div>
         </div>
     </div>
     </div>

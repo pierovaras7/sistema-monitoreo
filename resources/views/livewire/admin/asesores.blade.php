@@ -40,9 +40,7 @@
         <!-- Modal -->
         <div x-show="modalAsesor" x-transition
             class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50"
-            style="display: none;" @keydown.escape.window="modalAsesor = false" 
-            {{-- @click.self="modalAsesor = false" --}}
-            >
+            style="display: none;" @keydown.escape.window="modalAsesor = false" {{-- @click.self="modalAsesor = false" --}}>
             <div class="relative p-4 w-full max-w-md max-h-full">
                 <!-- Modal content -->
                 <div wire:key="asesor-form-{{ $modoEdicion ? 'edit' : 'add' }}"
@@ -219,7 +217,7 @@
                                         </button>
 
                                         <!-- Modal de Confirmación de Eliminación -->
-                                        <div x-show="showModal" x-transition
+                                        <div x-show="showModal" x-transition x-cloak
                                             @keydown.escape.window="showModal = false"
                                             class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                                             <div @click.away="showModal = false"
@@ -254,11 +252,9 @@
                     </tbody>
                 </table>
                 <!-- Paginación -->
-                @if ($asesores->count() > 15)
-                    <div class="p-4">
-                        {{ $asesores->links() }}
-                    </div>
-                @endif
+                <div class="p-4">
+                    {{ $asesores->links() }}
+                </div>
             </div>
         </div>
     </div>

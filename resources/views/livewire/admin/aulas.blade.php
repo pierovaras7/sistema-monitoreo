@@ -165,13 +165,13 @@
 
         <!-- Notificación -->
         @if (session()->has('message'))
-            <div x-show="showNotification"
-                x-transition
-                class="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center gap-2 z-50"
-            >
+            <div x-show="showNotification" x-transition
+                class="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center gap-2 z-50">
                 <!-- Ícono SVG de éxito -->
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2l4 -4M12 22c5.523 0 10 -4.477 10 -10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10z" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="white" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 12l2 2l4 -4M12 22c5.523 0 10 -4.477 10 -10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10z" />
                 </svg>
                 <span>{{ session('message') }}</span>
             </div>
@@ -272,7 +272,7 @@
                                         </button>
 
                                         <!-- Modal de Confirmación de Eliminación -->
-                                        <div x-show="showModal" x-transition
+                                        <div x-show="showModal" x-transition x-cloak
                                             @keydown.escape.window="showModal = false"
                                             class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                                             <div @click.away="showModal = false"
@@ -307,11 +307,9 @@
                     </tbody>
                 </table>
                 <!-- Paginación -->
-                @if ($aulas->count() > 15)
-                    <div class="p-4">
-                        {{ $aulas->links() }}
-                    </div>
-                @endif
+                <div class="p-4">
+                    {{ $aulas->links() }}
+                </div>
             </div>
         </div>
     </div>

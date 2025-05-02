@@ -2,16 +2,14 @@
 
 use App\Livewire\Admin\Alumnos;
 use App\Livewire\Admin\Asesores;
+use App\Livewire\Admin\Asistencias;
 use App\Livewire\Admin\Aulas;
 use App\Livewire\Admin\DetalleAula;
 use App\Livewire\Admin\DetalleSesion;
 use App\Livewire\Admin\Instituciones;
 use App\Livewire\Admin\Programas;
-use App\Models\Sesion;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
-use Illuminate\Support\Str;
 
 
 Route::view('dashboard', 'dashboard')
@@ -36,15 +34,20 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     
 });
 
-Route::get('/asistencia/{uuid}', function ($uuid) {
-    // Buscar la sesión por el campo link_asistencia
-    $sesion = Sesion::where('link_asistencia', $uuid)->firstOrFail();
+Route::get('/asistencia/{uuid}', Asistencias::class)->name('asistencia.temporal');
 
-    $now = Carbon::now('America/Lima');
 
-    if (!$now->between($sesion->fecha_inicio, $sesion->fecha_fin)) {
-        abort(403, 'Esta sesión no está activa en este momento.');
-    }
+// Route::get('/asistencias/{uuid}', function ($uuid) {
+//     // Buscar la sesión por el campo link_asistencia
+//     $sesion = Sesion::where('link_asistencia', $uuid)->firstOrFail();
 
-    return view('livewire.asistencia', compact('sesion'));
-})->name('asistencia.temporal');
+//     $now = Carbon::now('America/Lima');
+
+//     if (!$now->between($sesion->fecha_inicio, $sesion->fecha_fin)) {
+//         abort(403, 'Esta sesión no está activa en este momento.');
+//     }
+
+//     return view('livewire.asistencia', compact('sesion'));
+// })->name('asistencia.temporal');
+
+

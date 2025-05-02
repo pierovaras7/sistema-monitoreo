@@ -34,7 +34,7 @@ new class extends Component
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" wire:navigate>
+                    <a href="{{ route('dashboard') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-white" />
                     </a>
                 </div>
@@ -45,7 +45,6 @@ new class extends Component
                     <x-nav-link
                         :href="route('dashboard')"
                         :active="request()->routeIs('dashboard')"
-                        wire:navigate
                         class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
                     >
                         {{ __('Dashboard') }}
@@ -56,7 +55,6 @@ new class extends Component
                     <x-nav-link
                         :href="route('admin.asesores')"
                         :active="request()->routeIs('admin.asesores')"
-                        wire:navigate
                         class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
                     >
                         {{ __('Asesores') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
@@ -67,7 +65,6 @@ new class extends Component
                     <x-nav-link
                         :href="route('admin.alumnos')"
                         :active="request()->routeIs('admin.alumnos')"
-                        wire:navigate
                         class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
                     >
                         {{ __('Alumnos') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
@@ -78,7 +75,6 @@ new class extends Component
                     <x-nav-link
                         :href="route('admin.instituciones')"
                         :active="request()->routeIs('admin.instituciones')"
-                        wire:navigate
                         class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
                     >
                         {{ __('Universidades') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
@@ -89,7 +85,6 @@ new class extends Component
                     <x-nav-link
                         :href="route('admin.programas')"
                         :active="request()->routeIs('admin.programas')"
-                        wire:navigate
                         class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
                     >
                         {{ __('Programas') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
@@ -100,7 +95,6 @@ new class extends Component
                     <x-nav-link
                         :href="route('admin.aulas')"
                         :active="request()->routeIs('admin.aulas')"
-                        wire:navigate
                         class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
                     >
                         {{ __('Aulas') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->

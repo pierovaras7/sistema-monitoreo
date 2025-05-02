@@ -38,7 +38,7 @@ class DetalleAula extends Component
                 $query->where('aula_id', $this->aulaId);
             })
             ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(15);
+            ->paginate(10);
 
         $aula = Aula::with(['sesiones' => function ($query) {
             $query->orderBy('fecha_inicio', 'desc');
@@ -85,10 +85,21 @@ class DetalleAula extends Component
         'telefono.regex' => 'El teléfono solo debe contener números.',
     ];
 
-    public function updatedAlumno($propertyName)
+    // public function updatedAlumno($propertyName)
+    // {
+    //     $this->validateOnly($propertyName);
+    // }
+    public function updated($propertyName)
     {
-        $this->validateOnly($propertyName);
+        if (in_array($propertyName, ['nombre', 'dni', 'telefono'])) {
+            $this->validateOnly($propertyName, $this->rulesAlumno(), $this->messagesAlumno);
+        }
+
+        if (in_array($propertyName, ['titulo', 'fecha_inicio', 'fecha_fin', 'link_reunion'])) {
+            $this->validateOnly($propertyName, $this->rulesSesion(), $this->messagesSesion);
+        }
     }
+
 
     public function guardarAlumno()
     {
@@ -219,12 +230,16 @@ class DetalleAula extends Component
     }
 
     // Reglas de validación para sesiones
-    protected $rulesSesion = [
-        'titulo' => 'required|string|max:255',
-        'fecha_inicio' => 'required|date',
-        'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
-        'link_reunion' => 'nullable|url',
-    ];
+    protected function rulesSesion()
+    {
+        return [
+            'titulo' => 'required|string|max:255',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+            'link_reunion' => 'nullable|url',
+        ];
+    }
+
 
     protected $messagesSesion = [
         'titulo.required' => 'El título de la sesión es obligatorio.',
@@ -244,7 +259,7 @@ class DetalleAula extends Component
 
     public function guardarSesion()
     {
-        $this->validate($this->rulesSesion, $this->messagesSesion);
+        $this->validate($this->rulesSesion(), $this->messagesSesion);
 
         // Crear la sesión
         $sesion = new Sesion();

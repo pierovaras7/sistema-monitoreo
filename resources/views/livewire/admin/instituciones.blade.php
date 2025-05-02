@@ -138,6 +138,7 @@
                                     <div 
                                         x-show="showModal" 
                                         x-transition
+                                        x-cloak
                                         @keydown.escape.window="showModal = false"
                                         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
                                     >
@@ -176,11 +177,9 @@
                 </tbody>
             </table>
             <!-- Paginación -->
-            @if($instituciones->count() > 15)
-                <div class="p-4">
-                    {{ $instituciones->links() }}
-                </div>
-            @endif
+            <div class="p-4">
+                {{ $instituciones->links() }}
+            </div>
         </div>
     </div>
     </div>
