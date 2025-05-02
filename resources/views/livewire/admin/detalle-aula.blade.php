@@ -1,7 +1,13 @@
 <div class="custom-px">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Aula {{$aula->seccion}} // {{ $aula->codigo }}
+            {{ $aula->codigo }} - Aula {{$aula->seccion}} 
+            <p class="text-sm text-gray-600 mt-1">
+                <strong>Programa:</strong> {{ $aula->programa->nombre ?? 'N/A' }} <br>
+                <strong>Mencion:</strong> {{ $aula->programa->mencion ?? 'N/A' }} <br>
+                <strong>Asesor:</strong> {{ $aula->asesor->nombre ?? 'N/A' }} <br>
+                <strong>N Alumnos:</strong> {{ $aula->alumnos->count() ?? 'N/A' }} <br>
+            </p>
         </h2>
     </x-slot>
 

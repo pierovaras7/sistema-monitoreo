@@ -23,12 +23,6 @@ class UserSeeder extends Seeder
         ]);
         $admin->assignRole($adminRole);
 
-        $asesor = User::create([
-            'name' => 'Asesor Juan',
-            'email' => 'asesor@demo.com',
-            'password' => Hash::make('asesor123'),
-        ]);
-        $asesor->assignRole($asesorRole);
     }
 }
 

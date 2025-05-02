@@ -20,6 +20,7 @@ class DetalleAula extends Component
     public $sortDirection = 'asc'; // Ascendente por defecto
 
 
+    protected $listeners = ['AlumnosImportados' => 'refreshAlumnos'];
 
     // Propiedades para sesiones
     public $titulo, $fecha_inicio, $fecha_fin, $link_reunion, $link_asistencia, $modalSesion = false;
@@ -29,6 +30,11 @@ class DetalleAula extends Component
         $this->aulaId = $aulaId;
     }
 
+    public function refreshAlumnos()
+    {
+        // Llama a tu lógica de carga de datos de nuevo
+        $this->render(); // Vuelve a ejecutar el render
+    }
 
     public function render()
     {
@@ -52,7 +58,7 @@ class DetalleAula extends Component
 
     protected function rulesAlumno()
     {
-        $dniRule = 'required|string|size:8|regex:/^[0-9]+$/|unique:alumnos,dni';
+        $dniRule = 'required|string|size:8|regex:/^[0-9]+$/';
 
         if ($this->modoEdicionAlumno && $this->alumnoId) {
             // Excluir el DNI actual del alumno en edición
@@ -77,7 +83,6 @@ class DetalleAula extends Component
         'dni.string' => 'El DNI debe ser una cadena de texto.',
         'dni.size' => 'El DNI debe tener exactamente 8 caracteres.',
         'dni.regex' => 'El DNI solo debe contener números.',
-        'dni.unique' => 'Este DNI ya está registrado en el sistema.',
 
         'telefono.required' => 'El teléfono es obligatorio.',
         'telefono.string' => 'El teléfono debe ser una cadena de texto.',
@@ -103,33 +108,69 @@ class DetalleAula extends Component
 
     public function guardarAlumno()
     {
-        $this->validate($this->rulesAlumno(), $this->messagesAlumno);
+        $this->validate([
+            'nombre' => 'required|string|max:255',
+            'dni' => 'required|string|max:20',
+            'telefono' => 'nullable|string|max:20',
+        ]);
 
         $data = $this->only(['nombre', 'dni', 'telefono']);
 
+        // ✅ MODO EDICIÓN
         if ($this->modoEdicionAlumno) {
             $alumno = Alumno::find($this->alumnoId);
+
+
+            // Solo se actualizan los datos, no se toca la relación con el aula
             $alumno->update($data);
+
             session()->flash('message', 'Alumno actualizado correctamente.');
-        } else {
-            // Crear alumno
-            $alumno = Alumno::create($data);
+        } 
+        // ✅ MODO CREACIÓN
+        else {
+            $alumno = Alumno::where('dni', $data['dni'])->first();
 
-            // Relación con el aula
-            AlumnoAula::create([
-                'alumno_id' => $alumno->id,
-                'aula_id' => $this->aulaId,
-            ]);
+            if ($alumno) {
+                // Verificar si ya está en esta aula
+                if($alumno->active == false){
+                    $alumno->active = true;
+                    $alumno->save();
+                }
 
-            // Registrar asistencias por sesiones pasadas
-            // $this->registrarAsistenciasFaltantes($alumno);
+                $yaRelacionado = AlumnoAula::where('alumno_id', $alumno->id)
+                    ->where('aula_id', $this->aulaId)
+                    ->exists();
+                
 
-            session()->flash('message', 'Alumno creado correctamente y asistencias registradas.');
+                if ($yaRelacionado) {
+                    $this->addError('dni', 'Este alumno ya está registrado en esta aula.');
+                    return;
+                }
+
+                // Crear solo la relación con el aula
+                AlumnoAula::create([
+                    'alumno_id' => $alumno->id,
+                    'aula_id' => $this->aulaId,
+                ]);
+
+                session()->flash('message', 'Alumno ya existente relacionado con esta aula correctamente.');
+            } else {
+                // Crear alumno y su relación
+                $alumno = Alumno::create($data);
+
+                AlumnoAula::create([
+                    'alumno_id' => $alumno->id,
+                    'aula_id' => $this->aulaId,
+                ]);
+
+                session()->flash('message', 'Alumno creado y relacionado con esta aula correctamente.');
+            }
         }
 
         $this->limpiarAlumno();
         $this->dispatch('alumno-changed', 'Alumno guardado con éxito!');
     }
+
 
     public function registrarAsistenciasFaltantes($alumno)
     {
@@ -183,11 +224,6 @@ class DetalleAula extends Component
         AlumnoAula::where('alumno_id', $id)
             ->where('aula_id', $this->aulaId)
             ->delete();
-
-        // Realiza el borrado lógico
-        $alumno = Alumno::findOrFail($id);
-        $alumno->active = false;
-        $alumno->save();
 
         // Mensaje de notificación
         session()->flash('message', 'Alumno eliminado correctamente.');

@@ -24,13 +24,7 @@ class AlumnosImport implements ToModel, WithValidation, SkipsOnFailure, WithHead
   
     public function model(array $row)
     {
-        // Ignorar la primera fila
-        if ($this->isFirstRow) {
-            $this->isFirstRow = false;
-            return null; // No hacer nada con la primera fila
-        }
 
-    
         $alumno = Alumno::create([
             'dni' => $row['dni'],    // Usando las claves del encabezado
             'nombre' => $row['nombre'],
