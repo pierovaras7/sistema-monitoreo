@@ -51,54 +51,73 @@ new class extends Component
                     </x-nav-link>
                 </div>
                 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link
-                        :href="route('admin.asesores')"
-                        :active="request()->routeIs('admin.asesores')"
-                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
-                    >
-                        {{ __('Asesores') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
-                    </x-nav-link>
-                </div>
+                @role('admin')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link
+                            :href="route('admin.asesores')"
+                            :active="request()->routeIs('admin.asesores')"
+                            class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                        >
+                            {{ __('Asesores') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                        </x-nav-link>
+                    </div>
+                @endrole
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link
-                        :href="route('admin.alumnos')"
-                        :active="request()->routeIs('admin.alumnos')"
-                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
-                    >
-                        {{ __('Alumnos') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
-                    </x-nav-link>
-                </div>
+                @role('admin')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link
+                            :href="route('admin.alumnos')"
+                            :active="request()->routeIs('admin.alumnos')"
+                            class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                        >
+                            {{ __('Alumnos') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                        </x-nav-link>
+                    </div>
+                @endrole
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link
-                        :href="route('admin.instituciones')"
-                        :active="request()->routeIs('admin.instituciones')"
-                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
-                    >
-                        {{ __('Instituciones') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
-                    </x-nav-link>
-                </div>
+                @role('admin')
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link
-                        :href="route('admin.programas')"
-                        :active="request()->routeIs('admin.programas')"
-                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
-                    >
-                        {{ __('Programas') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
-                    </x-nav-link>
-                </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link
+                            :href="route('admin.instituciones')"
+                            :active="request()->routeIs('admin.instituciones')"
+                            class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                        >
+                            {{ __('Instituciones') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                        </x-nav-link>
+                    </div>
+                @endrole
 
+                @role('admin')
+
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link
+                            :href="route('admin.programas')"
+                            :active="request()->routeIs('admin.programas')"
+                            class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                        >
+                            {{ __('Programas') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                        </x-nav-link>
+                    </div>
+                @endrole
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link
-                        :href="route('admin.aulas')"
-                        :active="request()->routeIs('admin.aulas')"
-                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
-                    >
-                        {{ __('Aulas') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
-                    </x-nav-link>
+                    @role('admin')
+                        <x-nav-link
+                            :href="route('admin.aulas')"
+                            :active="request()->routeIs('admin.aulas')"
+                            class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                        >
+                            {{ __('Aulas') }}
+                        </x-nav-link>
+                    @else
+                        <x-nav-link
+                            :href="route('asesor.aulas')"
+                            :active="request()->routeIs('asesor.aulas')"
+                            class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                        >
+                            {{ __('Mis Aulas') }}
+                        </x-nav-link>
+                    @endrole
                 </div>
 
             </div>
@@ -106,7 +125,7 @@ new class extends Component
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Modo Oscuro -->
-                <button @click="toggleTheme"
+                {{-- <button @click="toggleTheme"
                     class="mr-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white transition"
                     aria-label="Toggle Dark Mode">
                     <!-- Sol -->
@@ -120,7 +139,7 @@ new class extends Component
                         viewBox="0 0 20 20">
                         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
                     </svg>
-                </button>
+                </button> --}}
 
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">

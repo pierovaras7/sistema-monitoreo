@@ -111,7 +111,7 @@ class DetalleAula extends Component
             ]);
 
             // Registrar asistencias por sesiones pasadas
-            $this->registrarAsistenciasFaltantes($alumno);
+            // $this->registrarAsistenciasFaltantes($alumno);
 
             session()->flash('message', 'Alumno creado correctamente y asistencias registradas.');
         }

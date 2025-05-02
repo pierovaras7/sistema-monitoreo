@@ -119,6 +119,12 @@ class DetalleSesion extends Component
 
     public function render()
     {
-        return view('livewire.admin.detalle-sesion');
+        $asistencias = Asistencia::where('sesiones_id', $this->sesionId)
+                                ->latest()
+                                ->paginate(10);
+
+        return view('livewire.admin.detalle-sesion', [
+            'asistencias' => $asistencias,
+        ]);
     }
 }

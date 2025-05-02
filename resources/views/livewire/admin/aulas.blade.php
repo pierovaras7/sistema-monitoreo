@@ -2,16 +2,21 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Aulas') }}
+            @role('admin')
+                {{ __('Aulas') }}
+            @else
+                {{ __('Mis Aulas') }}
+            @endrole
         </h2>
     </x-slot>
 
+
     <div x-data="{ modalAula: false, showNotification: false, timeout: null }"
         x-on:aula-changed.window="modalAula = false; showNotification = true; clearTimeout(timeout); timeout = setTimeout(() => showNotification = false, 3000)">
-        <div class="flex flex-col sm:flex-row sm:space-x-4">
-            <!-- Botón para abrir el modal -->
+        <div class="flex items-center w-full gap-4 flex-wrap my-4">
+        @role('admin')
             <button @click="$wire.call('abrirModalAgregar').then(() => modalAula = true)"
-                class="my-5 block text-white text-xs md:text-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-1/6 flex items-center justify-center space-x-2"
+                class="my-5 text-white text-xs md:text-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto flex items-center justify-center space-x-2"
                 type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-6">
@@ -20,24 +25,25 @@
                 </svg>
                 Agregar Aula
             </button>
-            <div class="flex items-center sm:w-5/6">
-                <label for="simple-search" class="sr-only">Search</label>
-                <div class="relative w-full">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6 m-1">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
-                        </svg>
+        @endrole
 
-                    </div>
-                    <input type="text" id="simple-search" wire:model.live="search"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mx-2"
-                        placeholder="Buscar Aula" required />
+        <div class="flex-grow">
+            <label for="simple-search" class="sr-only">Buscar</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" class="size-6 mx-2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+                    </svg>
                 </div>
+                <input type="text" id="simple-search" wire:model.live="search"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="  Buscar Aula" required />
             </div>
-
         </div>
+    </div>
+
         <!-- Modal -->
         <div x-show="modalAula" x-transition
             class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -216,8 +222,13 @@
                                     20
                                 </td>
                                 <td class="px-6 py-4 flex items-center gap-3 justify-center">
-                                    <!-- Botón Editar -->
-                                    <a href="{{ route('admin.detalle-aula', ['aulaId' => $a->id]) }}"
+                                    @php
+                                        $rutaDetalle = auth()->user()->hasRole('admin') 
+                                            ? route('admin.detalle-aula', ['aulaId' => $a->id]) 
+                                            : route('asesor.detalle-aula', ['aulaId' => $a->id]);
+                                    @endphp
+
+                                    <a href="{{ $rutaDetalle }}"
                                         class="text-green-600 dark:text-green-400 hover:text-green-700"
                                         title="Ver Detalles">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

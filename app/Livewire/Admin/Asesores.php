@@ -104,6 +104,8 @@ class Asesores extends Component
                     'dni' => $this->dni,
                 ]);
 
+                $asesor->user->assignRole('asesor'); // Aquí asignas el rol
+
                 session()->flash('message', 'Asesor actualizado correctamente.');
             }
         } else {
@@ -120,6 +122,8 @@ class Asesores extends Component
                 'dni' => $this->dni,
                 'active' => true, // Si es necesario por tu lógica
             ]);
+
+            $user->assignRole('asesor'); // Aquí asignas el rol
 
             session()->flash('message', 'Asesor creado correctamente.');
         }

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\Aula;
 use App\Models\Asesor;
 use App\Models\Programa;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -30,11 +31,17 @@ class Aulas extends Component
 
     public function render()
     {
-        $aulas = Aula::with('asesor')
+        $query = Aula::with('asesor')
             ->where('codigo', 'like', '%' . $this->search . '%')
-            ->where('active', true)
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(15);
+            ->where('active', true);
+
+        if (Auth::user()->hasRole('asesor')) {
+            $asesorId = Auth::user()->asesor->id;
+            $query->where('asesores_id', $asesorId);
+        }
+
+        $aulas = $query->orderBy($this->sortField, $this->sortDirection)
+                    ->paginate(15);
 
         return view('livewire.admin.aulas', compact('aulas'));
     }

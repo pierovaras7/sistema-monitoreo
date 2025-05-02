@@ -34,20 +34,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     
 });
 
+Route::middleware(['auth', 'role:asesor'])->group(function () {
+    Route::get('/asesor/aulas', Aulas::class)->name('asesor.aulas');
+    Route::get('/asesor/detalle-aula/{aulaId}', DetalleAula::class)->name('asesor.detalle-aula');
+    Route::get('/asesor/sesiones/{sesionId}', DetalleSesion::class)->name('asesor.detalle-sesion');
+});
+
+
+
 Route::get('/asistencia/{uuid}', Asistencias::class)->name('asistencia.temporal');
-
-
-// Route::get('/asistencias/{uuid}', function ($uuid) {
-//     // Buscar la sesión por el campo link_asistencia
-//     $sesion = Sesion::where('link_asistencia', $uuid)->firstOrFail();
-
-//     $now = Carbon::now('America/Lima');
-
-//     if (!$now->between($sesion->fecha_inicio, $sesion->fecha_fin)) {
-//         abort(403, 'Esta sesión no está activa en este momento.');
-//     }
-
-//     return view('livewire.asistencia', compact('sesion'));
-// })->name('asistencia.temporal');
-
 

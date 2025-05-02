@@ -58,7 +58,7 @@ class User extends Authenticatable
     
     public function asesor()
     {
-        return $this->hasOne(Asesor::class);
+        return $this->hasOne(Asesor::class, 'user_id');
     }
 
 }

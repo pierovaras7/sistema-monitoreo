@@ -19,11 +19,6 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow p-6 mt-6 ">
-        <h3 class="text-lg font-bold mb-2">Datos del Aula</h3>
-        <p>Información detallada del aula aquí.</p>
-    </div>
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mt-6">
         <div class="lg:col-span-2 bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-bold mb-2">ALUMNOS</h3>
@@ -372,11 +367,17 @@
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                                 {{ \Carbon\Carbon::parse($sesion->created_at)->format('M Y') }}
                             </time>
-                            <a href="{{ route('admin.detalle-sesion', $sesion->id) }}">
+                            @php
+                                $rutaDetalle = auth()->user()->hasRole('admin') 
+                                    ? route('admin.detalle-sesion', $sesion->id) 
+                                    : route('asesor.detalle-sesion', $sesion->id);
+                            @endphp
+
+                            <a href="{{ $rutaDetalle }}">
                                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                                     {{ $sesion->titulo }}
                                 </h3>
-                            </a>                            
+                            </a>                         
                             <!-- Mostrar Fecha de Inicio y Fin -->
                             <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500 block">
                                 Inicio: {{ \Carbon\Carbon::parse($sesion->fecha_inicio)->format('d M Y - h:i A') }} 
