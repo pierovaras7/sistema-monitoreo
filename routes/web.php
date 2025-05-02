@@ -8,6 +8,9 @@ use App\Livewire\Admin\DetalleAula;
 use App\Livewire\Admin\DetalleSesion;
 use App\Livewire\Admin\Instituciones;
 use App\Livewire\Admin\Programas;
+use App\Models\Asistencia;
+use App\Models\Sesion;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Route;
 
 
@@ -31,7 +34,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/instituciones', Instituciones::class)->name('admin.instituciones');
     Route::get('/admin/alumnos', Alumnos::class)->name('admin.alumnos');
     Route::get('/admin/sesiones/{sesionId}', DetalleSesion::class)->name('admin.detalle-sesion');
-    
 });
 
 Route::middleware(['auth', 'role:asesor'])->group(function () {
@@ -40,6 +42,14 @@ Route::middleware(['auth', 'role:asesor'])->group(function () {
     Route::get('/asesor/sesiones/{sesionId}', DetalleSesion::class)->name('asesor.detalle-sesion');
 });
 
+Route::get('/admin/sesiones/{sesion}/pdf', function ($sesion) {
+    $sesion = Sesion::findOrFail($sesion); // Obtener la sesión
+    $asistencias = Asistencia::where('sesiones_id', $sesion->id)->get(); // Obtener asistencias relacionadas
+
+    $pdf = Pdf::loadView('pdf.asistencias', compact('asistencias', 'sesion'));
+
+    return $pdf->stream('asistencias.pdf'); // Para abrir en el navegador en vez de descargar
+})->name('sesion.pdf');
 
 
 Route::get('/asistencia/{uuid}', Asistencias::class)->name('asistencia.temporal');

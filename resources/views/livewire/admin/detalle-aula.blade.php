@@ -374,7 +374,7 @@
                             @endphp
 
                             <a href="{{ $rutaDetalle }}">
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white hover:underline">
                                     {{ $sesion->titulo }}
                                 </h3>
                             </a>                         

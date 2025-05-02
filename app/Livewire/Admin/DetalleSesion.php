@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Asistencia;
 use App\Models\Sesion;
+use Barryvdh\DomPDF\PDF;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -80,7 +81,7 @@ class DetalleSesion extends Component
         // Mensaje de éxito
         $this->dispatch('asistenciaActualizada');
     }
-    
+
     public function guardarObservacion($id, $observacion)
     {
         $asistencia = Asistencia::find($id);
