@@ -48,6 +48,7 @@ class Aulas extends Component
                     return $query->where('active', true);
                 })->ignore($this->aulaId), // Ignora el actual en modo edición
             ],
+            'seccion' => 'required|string|max:255',
             'asesores_id' => 'required|exists:asesores,id',
             'programas_id' => 'required|exists:programas,id',
         ];
@@ -59,8 +60,14 @@ class Aulas extends Component
         return [
             'codigo.required' => 'El código del aula es obligatorio.',
             'codigo.unique' => 'Este código ya está registrado.',
+
+            'seccion.required' => 'El nombre del programa es obligatorio.',
+            'seccion.string' => 'El nombre del programa debe ser una cadena de texto.',
+            'seccion.max' => 'El nombre del programa no debe exceder los 255 caracteres.',
+
             'asesores_id.required' => 'Debe seleccionar un asesor.',
             'asesores_id.exists' => 'El asesor seleccionado no es válido.',
+
             'programas_id.required' => 'Debe seleccionar un programa.',
             'programas_id.exists' => 'El programa seleccionado no es válido.'
         ];
