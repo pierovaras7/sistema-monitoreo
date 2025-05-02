@@ -77,18 +77,15 @@ new class extends Component
 
                 @role('admin')
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link
-                            :href="route('admin.instituciones')"
-                            :active="request()->routeIs('admin.instituciones')"
-                            class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
-                        >
-                            {{ __('Instituciones') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
-                        </x-nav-link>
-                    </div>
-                @endrole
-
-                @role('admin')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link
+                        :href="route('admin.instituciones')"
+                        :active="request()->routeIs('admin.instituciones')"
+                        class="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white"
+                    >
+                        {{ __('Universidades') }} <!-- Aquí puedes poner el nombre que desees, como 'Asesores' -->
+                    </x-nav-link>
+                </div>
 
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link

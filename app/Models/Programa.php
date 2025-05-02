@@ -9,7 +9,7 @@ class Programa extends Model
     protected $table = 'programas'; // Si no sigue la convención, asignamos el nombre explícitamente.
 
     // Atributos que se pueden asignar masivamente
-    protected $fillable = ['nombre', 'fecha_inicio', 'fecha_fin', 'periodo', 'instituciones_id'];
+    protected $fillable = ['nombre', 'fecha_inicio', 'fecha_fin', 'periodo', 'instituciones_id','mencion'];
 
     public function institucion()
     {

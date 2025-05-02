@@ -11,7 +11,7 @@ class Programas extends Component
 {
     public $periodos = [];
     public $instituciones = [];
-    public $nombre, $fecha_inicio, $fecha_fin, $periodo, $programaId;
+    public $nombre, $fecha_inicio, $fecha_fin, $periodo,$mencion, $programaId;
     public $modoEdicion = false;
     public $instituciones_id;
     public $modalPrograma;
@@ -46,6 +46,7 @@ class Programas extends Component
     {
         return [
             'nombre' => 'required|string|max:255|regex:/^[\pL\s]+$/u',
+            'mencion' => 'required|string|max:255|regex:/^[\pL\s]+$/u',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
             'periodo' => 'required|string|max:255',
@@ -60,6 +61,11 @@ class Programas extends Component
             'nombre.string' => 'El nombre del programa debe ser una cadena de texto.',
             'nombre.max' => 'El nombre del programa no debe exceder los 255 caracteres.',
             'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
+
+            'mencion.required' => 'El nombre del programa es obligatorio.',
+            'mencion.string' => 'El nombre del programa debe ser una cadena de texto.',
+            'mencion.max' => 'El nombre del programa no debe exceder los 255 caracteres.',
+            'mencion.regex' => 'El nombre solo debe contener letras y espacios.',
             
             'fecha_inicio.required' => 'La fecha de inicio es obligatoria.',
             'fecha_inicio.date' => 'La fecha de inicio debe ser una fecha válida.',
@@ -88,7 +94,7 @@ class Programas extends Component
     {
         $this->validate();
 
-        $data = $this->only(['nombre', 'fecha_inicio', 'fecha_fin', 'periodo', 'instituciones_id']);
+        $data = $this->only(['nombre','mencion','fecha_inicio', 'fecha_fin', 'periodo', 'instituciones_id']);
 
         if ($this->modoEdicion) {
             $programa = Programa::find($this->programaId);
@@ -119,6 +125,7 @@ class Programas extends Component
         $this->programaId = $programa->id;
         $this->instituciones_id = $programa->instituciones_id;
         $this->nombre = $programa->nombre;
+        $this->mencion=$programa->mencion;
         $this->fecha_inicio = Carbon::parse($programa->fecha_inicio)->format('Y-m-d');
         $this->fecha_fin = Carbon::parse($programa->fecha_fin)->format('Y-m-d');
         $this->periodo = $programa->periodo;
@@ -160,7 +167,7 @@ class Programas extends Component
 
     public function limpiar()
     {
-        $this->reset(['nombre', 'fecha_inicio', 'fecha_fin', 'periodo', 'instituciones_id', 'programaId', 'modoEdicion']);
+        $this->reset(['nombre','mencion','fecha_inicio', 'fecha_fin', 'periodo', 'instituciones_id', 'programaId', 'modoEdicion']);
     }
     
     public function sortBy($field)
