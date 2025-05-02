@@ -287,11 +287,9 @@
                     </tbody>
                 </table>
                 <!-- Paginación -->
-                @if ($aulas->count() > 15)
-                    <div class="p-4">
-                        {{ $aulas->links() }}
-                    </div>
-                @endif
+                <div class="p-4">
+                    {{ $aulas->links() }}
+                </div>
             </div>
         </div>
     </div>

@@ -225,11 +225,9 @@
                 </tbody>
             </table>
             <!-- Paginación -->
-            @if($alumnos->count() > 15)
-                <div class="p-4">
-                    {{ $alumnos->links() }}
-                </div>
-            @endif
+            <div class="p-4">
+                {{ $alumnos->links() }}
+            </div>
         </div>
     </div>
     </div>

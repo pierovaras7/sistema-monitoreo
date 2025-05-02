@@ -176,11 +176,9 @@
                 </tbody>
             </table>
             <!-- Paginación -->
-            @if($instituciones->count() > 15)
-                <div class="p-4">
-                    {{ $instituciones->links() }}
-                </div>
-            @endif
+            <div class="p-4">
+                {{ $instituciones->links() }}
+            </div>
         </div>
     </div>
     </div>

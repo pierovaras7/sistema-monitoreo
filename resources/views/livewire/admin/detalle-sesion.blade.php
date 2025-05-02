@@ -300,11 +300,9 @@
                     </tbody>
                 </table>
                 <!-- Paginación -->
-                @if ($sesion->asistencias->count() > 15)
-                    <div class="p-4">
-                        {{ $sesion->asistencias->links() }}
-                    </div>
-                @endif
+                <div class="p-4">
+                    {{ $sesion->asistencias->links() }}
+                </div>
             </div>
         </div>
         <div x-data="{ showMessage: false, message: 'La asistencia se ha actualizado correctamente.' }"

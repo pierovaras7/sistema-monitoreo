@@ -316,11 +316,9 @@
                 </tbody>
             </table>
             <!-- Paginación -->
-            @if($programas->count() > 15)
-                <div class="p-4">
-                    {{ $programas->links() }}
-                </div>
-            @endif
+            <div class="p-4">
+                {{ $programas->links() }}
+            </div>
         </div>
     </div>
     </div>

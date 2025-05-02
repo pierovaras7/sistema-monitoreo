@@ -6,6 +6,7 @@ use App\Imports\AlumnosImport;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class SubirExcel extends Component
 {
@@ -34,6 +35,7 @@ class SubirExcel extends Component
         }
     }
 
+    public $errores = [];
 
     // Método para subir y procesar el archivo Excel
     public function subirArchivo($aulaId)
@@ -41,13 +43,42 @@ class SubirExcel extends Component
 
         $this->validate();
 
-        // Procesar el archivo Excel usando el importador
-        Excel::import(new AlumnosImport($aulaId), $this->archivo);
-
-        session()->flash('message', 'Alumnos importados correctamente.');
-
-        // Resetear el archivo después de subirlo
+        try {
+            $import = new AlumnosImport($aulaId);
+            Excel::import($import, $this->archivo);
+        
+            if ($import->failures()->isNotEmpty()) {
+                $this->errores = collect($import->failures())->map(function ($failure) {
+                    return [
+                        'fila' => $failure->row(),
+                        'campo' => $failure->attribute(),
+                        'errores' => $failure->errors(),
+                        'valores' => $failure->values(),
+                    ];
+                })->toArray();
+        
+                $this->dispatch('abrir-modal-errores');
+            } else {
+                // Despachar el evento de éxito para mostrar un modal de éxito
+                $this->dispatch('mostrar-modal-exito');
+                $this->dispatch('AlumnosImportados');
+            }
+        } catch (ValidationException $e) {
+            $this->errores = collect($e->failures())->map(function ($failure) {
+                return [
+                    'fila' => $failure->row(),
+                    'campo' => $failure->attribute(),
+                    'errores' => $failure->errors(),
+                    'valores' => $failure->values(),
+                ];
+            })->toArray();
+        
+            $this->dispatch('abrir-modal-errores');
+        }
+        
+    
         $this->reset('archivo');
+    
     }
 
     public function render()

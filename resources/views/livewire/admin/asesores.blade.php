@@ -254,11 +254,9 @@
                     </tbody>
                 </table>
                 <!-- Paginación -->
-                @if ($asesores->count() > 15)
-                    <div class="p-4">
-                        {{ $asesores->links() }}
-                    </div>
-                @endif
+                <div class="p-4">
+                    {{ $asesores->links() }}
+                </div>
             </div>
         </div>
     </div>

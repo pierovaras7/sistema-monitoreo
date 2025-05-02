@@ -1,10 +1,68 @@
 <div>
-    <!-- Mostrar mensaje de éxito -->
-    @if (session()->has('message'))
-        <div class="bg-green-500 text-white p-2 rounded-md mb-4">
-            {{ session('message') }}
+    <div 
+    x-data="{ open: false }" 
+    x-on:abrir-modal-errores.window="open = true" 
+    @keydown.escape.window="open = false"
+    >
+        <div 
+            x-show="open" 
+            class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+        >
+            <div 
+                class="bg-white rounded-lg p-4 max-w-lg w-full flex flex-col" 
+                style="height: 400px;"
+            >
+                <h2 class="text-lg font-semibold mb-4">Errores de importación</h2>
+
+                <div class="overflow-y-auto flex-1 pr-2">
+                    <ul class="list-disc pl-5 text-sm text-red-600 space-y-2">
+                        @php
+                            $erroresPorFila = collect($errores)->groupBy('fila');
+                        @endphp
+
+                        @foreach ($erroresPorFila as $fila => $erroresFila)
+                            <li>
+                                <strong>Fila {{ $fila }}:</strong>
+                                @php
+                                    $mensajes = $erroresFila->map(function ($e) {
+                                        $campo = ucfirst($e['campo']);
+                                        $valor = $e['valores'][$e['campo']] ?? 'N/A';
+                                        return "" . implode(', ', $e['errores']) . " (Valor: {$valor})";
+                                    })->implode('; ');
+                                @endphp
+                                {{ $mensajes }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="mt-4 text-right">
+                    <button 
+                        @click="open = false" 
+                        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                    >
+                        Cerrar
+                    </button>
+                </div>
+            </div>
         </div>
-    @endif
+    </div>
+
+    <div x-data="{ open: false, message: '' }" x-on:mostrar-modal-exito.window="open = true; message = $event.detail.message">
+        <div x-show="open" x-transition class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div class="bg-white rounded-lg p-4 max-w-lg w-full">
+                <h2 class="text-lg font-semibold mb-4 text-green-600">¡Éxito!</h2>
+                <p class="text-sm">Alumnos importados correctamente.</p>
+                <div class="mt-4 text-right">
+                    <button @click="open = false" class="px-4 py-2 bg-green-500 text-white rounded">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    
 
     {{$archivo}}
 

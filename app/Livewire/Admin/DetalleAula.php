@@ -38,7 +38,7 @@ class DetalleAula extends Component
                 $query->where('aula_id', $this->aulaId);
             })
             ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(15);
+            ->paginate(10);
 
         $aula = Aula::with(['sesiones' => function ($query) {
             $query->orderBy('fecha_inicio', 'desc');
