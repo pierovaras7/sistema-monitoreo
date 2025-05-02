@@ -1,32 +1,80 @@
-<div class="custom-px">
-    <x-slot name="header">
-        <div class="flex flex-row justify-between items-center">
-            {{-- <h1 class="font-semibold text-3xl text-gray-800 leading-tight">
-                {{ $sesion->titulo }}
-            </h1> --}}
-        </div>
-    </x-slot>
-
     <div x-data="{ modalSesion: false, showNotification: false, timeout: null }"
         x-on:cerrar-modal.window="modalSesion = false; showNotification = true; clearTimeout(timeout); timeout = setTimeout(() => showNotification = false, 3000)">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6 mt-5">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ">
-                <!-- Título de la sesión -->
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-                    {{ $sesion->titulo }}
-                </h1>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 custom-px">
+            <div class="grid grid-cols-1">
+                <!-- Columna 1, Fila 1: Título y botón -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 col-span-2 md:col-span-1">
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                        {{ $sesion->titulo }}
+                    </h1>
+                    <button @click="$wire.call('abrirModalAgregar').then(() => modalSesion = true)"
+                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 rounded-lg dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-all"
+                        type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5 mr-2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        Editar
+                    </button>
+                </div>
 
-                <!-- Botón para abrir el modal -->
-                <button @click="$wire.call('abrirModalAgregar').then(() => modalSesion = true)"
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 rounded-lg dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-all"
-                    type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-5 h-5 mr-2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                    Editar
-                </button>
+                <!-- Columna 2, Fila 1: Fechas -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    <p class="text-md text-gray-600">
+                        <b>Inicio: </b> {{ \Carbon\Carbon::parse($sesion->fecha_inicio)->format('d/m/Y H:i') }}
+                    </p>
+                    <p class="text-md text-gray-600">
+                        <b>Fin: </b> {{ \Carbon\Carbon::parse($sesion->fecha_fin)->format('d/m/Y H:i') }}
+                    </p>
+
+                    <!-- Columna 1, Fila 2: Primer bloque de URL -->
+                    @if($sesion->link_reunion)
+                    <div class="w-full max-w-sm mb-6">
+                        <label for="link_reunion" class="text-sm font-medium text-gray-900 dark:text-white mb-2 block">URL de Reunión:</label>
+                        <div class="flex items-center relative">
+                            <span class="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg dark:bg-gray-600 dark:text-white dark:border-gray-600">URL</span>
+                            <input id="link_reunion" type="text" readonly disabled
+                                class="bg-gray-50 border border-e-0 border-gray-300 text-gray-500 dark:text-gray-400 text-sm border-s-0 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                value="{{ $link_reunion }}" />
+                            <div class="relative">
+                                <button data-copy="link_reunion"
+                                    class="copy-btn shrink-0 z-10 inline-flex items-center py-3 px-4 text-sm font-medium text-white bg-blue-700 rounded-e-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700"
+                                    type="button">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 18 20">
+                                        <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                                    </svg>
+                                </button>
+                                <div class="tooltip absolute bottom-full mb-2  text-white bg-black text-xs rounded px-2 py-1 hidden">
+                                    Copiado!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    <!-- Columna 2, Fila 2: Segundo bloque de URL duplicado -->
+                    
+                    
+                    <div class="w-full max-w-sm">
+                        <label for="link_asistencia" class="text-sm font-medium text-gray-900 dark:text-white mb-2 block">Link Asistencia (Compartir con Alumnos):</label>
+                        <div class="flex items-center relative">
+                            <span class="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg dark:bg-gray-600 dark:text-white dark:border-gray-600">URL</span>
+                            <input id="link_asistencia" type="text" readonly disabled
+                                class="bg-gray-50 border border-e-0 border-gray-300 text-gray-500 dark:text-gray-400 text-sm border-s-0 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                value="{{ 'http://127.0.0.1:8000/asistencia/' . $sesion->link_asistencia }}" />
+                            <button data-copy="link_asistencia"
+                                class="copy-btn shrink-0 z-10 inline-flex items-center py-3 px-4 text-sm font-medium text-white bg-blue-700 rounded-e-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700"
+                                type="button">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 18 20">
+                                    <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                                </svg>
+                            </button>
+                            <div class="tooltip absolute bottom-full mb-2  text-white bg-black text-xs rounded px-2 py-1 hidden">
+                                Copiado!
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -143,281 +191,173 @@
             </div>
         @endif
 
-        <p class="text-md text-gray-600 my-2">
-            <b>Inicio: </b> {{ \Carbon\Carbon::parse($sesion->fecha_inicio)->format('d/m/Y H:i') }}
-        </p>
-        <p class="text-md text-gray-600 my-2">
-            <b>Fin: </b> {{ \Carbon\Carbon::parse($sesion->fecha_fin)->format('d/m/Y H:i') }}
-        </p>
 
+        <div class="custom-px">
 
-        <!-- LINK DE REUNION CON ASISTENCIA-->
-        <!-- LINK DE REUNIÓN -->
-        {{-- @if ($sesion->link_reunion)
-            <div class="w-full max-w-sm">
-                <div class="mb-2 flex justify-between items-center">
-                    <label for="reunion-url" class="text-sm font-medium text-gray-900 dark:text-white">Link de
-                        Reunión:</label>
-                </div>
-                <div class="flex items-center">
-                    <span
-                        class="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium bg-gray-100 border border-gray-300 rounded-s-lg dark:bg-gray-600 dark:text-white dark:border-gray-600">URL</span>
-                    <div class="relative w-full">
-                        <input id="reunion-url" type="text"
-                            class="bg-gray-50 border border-e-0 border-gray-300 text-gray-500 text-sm border-s-0 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
-                            value="{{ $sesion->link_reunion }}" readonly disabled />
-                    </div>
-                    <button data-tooltip-target="tooltip-reunion-url" data-copy-to-clipboard-target="reunion-url"
-                        class="shrink-0 z-10 inline-flex items-center py-3 px-4 text-sm font-medium text-white bg-blue-700 rounded-e-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 border border-blue-700 dark:border-blue-600 hover:border-blue-800 dark:hover:border-blue-700"
-                        type="button">
-                        <span id="default-icon-reunion">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 18 20">
-                                <path
-                                    d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
-                            </svg>
-                        </span>
-                        <span id="success-icon-reunion" class="hidden">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 16 12">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5" />
-                            </svg>
-                        </span>
-                    </button>
-                    <div id="tooltip-reunion-url" role="tooltip"
-                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
-                        <span id="default-tooltip-message-reunion">Copiar enlace</span>
-                        <span id="success-tooltip-message-reunion" class="hidden">¡Copiado!</span>
-                        <div class="tooltip-arrow" data-popper-arrow></div>
-                    </div>
-                </div>
-            </div>
-        @endif --}}
-
-
-        <div class="w-full max-w-sm">
-            <div class="mb-2 flex justify-between items-center">
-                <label for="website-url" class="text-sm font-medium text-gray-900 dark:text-white">Verify your
-                    website:</label>
-            </div>
-            <div class="flex items-center">
-                <span
-                    class="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg dark:bg-gray-600 dark:text-white dark:border-gray-600">URL</span>
-                <div class="relative w-full">
-                @php
-                    $urlAsistencia = url('/asistencia/' . $sesion->link_asistencia);
-                @endphp
-                    <input id="website-url" type="text" aria-describedby="helper-text-explanation"
-                        class="bg-gray-50 border border-e-0 border-gray-300 text-gray-500 dark:text-gray-400 text-sm border-s-0 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        value="{{$urlAsistencia}}" readonly disabled />
-                </div>
-                <button data-tooltip-target="tooltip-website-url" data-copy-to-clipboard-target="website-url"
-                    class="shrink-0 z-10 inline-flex items-center py-3 px-4 text-sm font-medium text-center text-white bg-blue-700 rounded-e-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 border border-blue-700 dark:border-blue-600 hover:border-blue-800 dark:hover:border-blue-700"
-                    type="button">
-                    <span id="default-icon">
-                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor" viewBox="0 0 18 20">
-                            <path
-                                d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
-                        </svg>
-                    </span>
-                    <span id="success-icon" class="hidden">
-                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 16 12">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5" />
-                        </svg>
-                    </span>
-                </button>
-                <div id="tooltip-website-url" role="tooltip"
-                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
-                    <span id="default-tooltip-message">Copy link</span>
-                    <span id="success-tooltip-message" class="hidden">Copied!</span>
-                    <div class="tooltip-arrow" data-popper-arrow></div>
-                </div>
-            </div>
-        </div>
-
-
-
-        <!-- LINK DE ASISTENCIA -->
-        {{-- @if ($sesion->link_asistencia)
-            <div class="w-full max-w-sm">
-                <div class="mb-2 flex justify-between items-center">
-                    <label for="asistencia-url" class="text-sm font-medium text-gray-900 dark:text-white">Link de
-                        Asistencia:</label>
-                </div>
-                <div class="flex items-center">
-                    <span
-                        class="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium bg-gray-100 border border-gray-300 rounded-s-lg dark:bg-gray-600 dark:text-white dark:border-gray-600">URL</span>
-                    <div class="relative w-full">
-                        <input id="asistencia-url" type="text"
-                            class="bg-gray-50 border border-e-0 border-gray-300 text-gray-500 text-sm border-s-0 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
-                            value="{{ $sesion->link_asistencia }}" readonly disabled />
-                    </div>
-                    <button data-tooltip-target="tooltip-asistencia-url"
-                        data-copy-to-clipboard-target="asistencia-url"
-                        class="shrink-0 z-10 inline-flex items-center py-3 px-4 text-sm font-medium text-white bg-blue-700 rounded-e-lg hover:bg-blue-800"
-                        type="button">
-                        <span id="default-icon-asistencia">
-                            <!-- icono copiar -->
-                        </span>
-                        <span id="success-icon-asistencia" class="hidden">
-                            <!-- icono copiado -->
-                        </span>
-                    </button>
-                    <div id="tooltip-asistencia-url" role="tooltip" class="tooltip hidden">
-                        <span id="default-tooltip-message-asistencia">Copy link</span>
-                        <span id="success-tooltip-message-asistencia" class="hidden">Copied!</span>
-                    </div>
-                </div>
-            </div>
-        @endif --}}
-
-
-        <!-- Notificación -->
-        @if (session()->has('message'))
-            <div x-show="showNotification" x-transition
-                class="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center gap-2 z-50">
-                <!-- Ícono SVG de éxito -->
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="white" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 12l2 2l4 -4M12 22c5.523 0 10 -4.477 10 -10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10z" />
-                </svg>
-                <span>{{ session('message') }}</span>
-            </div>
-        @endif
-
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight mt-8 mb-4 uppercase">
-            Detalle de Asistencia
-        </h2>
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-gray-500 dark:text-gray-400 text-center">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th rowspan="2" class="px-4 py-3">#</th>
-                        <th colspan="3" class="px-6 py-3">Alumno</th>
-                        <th colspan="2" class="px-6 py-3">Asistencia</th>
-                        <th rowspan="2" colspan="2" class="px-6 py-3">Observaciones</th>
-                    </tr>
-                    <tr>
-                        <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('nombre')">
-                            DNI
-                            {{-- @if ($sortField === 'nombre')
-                    <span>{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
-                @endif --}}
-                        </th>
-                        <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('instituciones_id')">
-                            NOMBRE COMPLETO
-                            {{-- @if ($sortField === 'instituciones_id')
-                    <span>{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
-                @endif --}}
-                        </th>
-                        <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('instituciones_id')">
-                            TELEFONO
-                            {{-- @if ($sortField === 'instituciones_id')
-                    <span>{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
-                @endif --}}
-                        </th>
-                        <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('fecha_inicio')">
-                            ASISTIO
-                        </th>
-                        <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('fecha_fin')">
-                            FALTA
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($sesion->asistencias as $index => $asistencia)
-                        <tr
-                            class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
-                            <td class="px-4 py-4 font-medium text-gray-900 dark:text-white">
-                                {{ $index + 1 }}
-                            </td>
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $asistencia->alumno->dni }}
-                            </th>
-                            <td class="px-6 py-4">
-
-                                {{ $asistencia->alumno->nombre }}
-                            </td>
-                            <td class="px-6 py-4">
-
-                                {{ $asistencia->alumno->telefono }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <input type="radio" name="asistencia_{{ $asistencia->id }}"
-                                    class="form-radio text-green-600"
-                                    wire:change="actualizarAsistencia({{ $asistencia->id }}, true)"
-                                    {{ $asistencia->asistio ? 'checked' : '' }}>
-                            </td>
-                            <td class="px-6 py-4">
-                                <input type="radio" name="asistencia_{{ $asistencia->id }}"
-                                    class="form-radio text-red-600"
-                                    wire:change="actualizarAsistencia({{ $asistencia->id }}, false)"
-                                    {{ !$asistencia->asistio ? 'checked' : '' }}>
-                            </td>
-
-                            <td class="px-6 py-4">
-                                {{ $asistencia->observaciones }}sads
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <!-- Paginación -->
-            @if ($sesion->asistencias->count() > 15)
-                <div class="p-4">
-                    {{ $sesion->asistencias->links() }}
+            <!-- Notificación -->
+            @if (session()->has('message'))
+                <div x-show="showNotification" x-transition
+                    class="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center gap-2 z-50">
+                    <!-- Ícono SVG de éxito -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="white" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12l2 2l4 -4M12 22c5.523 0 10 -4.477 10 -10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10z" />
+                    </svg>
+                    <span>{{ session('message') }}</span>
                 </div>
             @endif
+
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight mt-8 mb-4 uppercase">
+                Detalle de Asistencia
+            </h2>
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-gray-500 dark:text-gray-400 text-center">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th rowspan="2" class="px-4 py-3">#</th>
+                            <th colspan="3" class="px-6 py-3">Alumno</th>
+                            <th colspan="2" class="px-6 py-3">Asistencia</th>
+                            <th rowspan="2" colspan="2" class="px-6 py-3">Observaciones</th>
+                        </tr>
+                        <tr>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('nombre')">
+                                DNI
+                                {{-- @if ($sortField === 'nombre')
+                        <span>{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                    @endif --}}
+                            </th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('instituciones_id')">
+                                NOMBRE COMPLETO
+                                {{-- @if ($sortField === 'instituciones_id')
+                        <span>{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                    @endif --}}
+                            </th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('instituciones_id')">
+                                TELEFONO
+                                {{-- @if ($sortField === 'instituciones_id')
+                        <span>{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                    @endif --}}
+                            </th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('fecha_inicio')">
+                                ASISTIO
+                            </th>
+                            <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="sortBy('fecha_fin')">
+                                FALTA
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($sesion->asistencias as $index => $asistencia)
+                            <tr
+                                class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+                                <td class="px-4 py-4 font-medium text-gray-900 dark:text-white">
+                                    {{ $index + 1 }}
+                                </td>
+                                <th scope="row"
+                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ $asistencia->alumno->dni }}
+                                </th>
+                                <td class="px-6 py-4">
+
+                                    {{ $asistencia->alumno->nombre }}
+                                </td>
+                                <td class="px-6 py-4">
+
+                                    {{ $asistencia->alumno->telefono }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <!-- Radio button para 'Asistió' -->
+                                    <input type="radio" name="asistencia_{{ $asistencia->id }}"
+                                        class="form-radio text-green-600"
+                                        wire:change="actualizarAsistencia({{ $asistencia->id }}, true)" 
+                                        {{ $asistencia->asistio ? 'checked' : '' }}>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <!-- Radio button para 'No Asistió' -->
+                                    <input type="radio" name="asistencia_{{ $asistencia->id }}"
+                                        class="form-radio text-red-600"
+                                        wire:change="actualizarAsistencia({{ $asistencia->id }}, false)" 
+                                        {{ !$asistencia->asistio ? 'checked' : '' }}>
+                                </td>
+                                
+
+                                <td class="px-6 py-4">
+                                    <div x-data="{ observacion: '{{ $asistencia->observacion }}', timeout: null }">
+                                        <textarea x-model="observacion" 
+                                                  x-on:input="clearTimeout(timeout); 
+                                                             timeout = setTimeout(() => { 
+                                                                 @this.call('guardarObservacion', {{ $asistencia->id }}, observacion); 
+                                                             }, 2000)" 
+                                                  class="form-textarea w-full p-2 border rounded-md text-xs" 
+                                                  rows="3">
+                                        </textarea>
+                                    </div>
+                                </td>
+                                                               
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <!-- Paginación -->
+                @if ($sesion->asistencias->count() > 15)
+                    <div class="p-4">
+                        {{ $sesion->asistencias->links() }}
+                    </div>
+                @endif
+            </div>
         </div>
+        <div x-data="{ showMessage: false, message: 'La asistencia se ha actualizado correctamente.' }"
+            x-init="
+                @this.on('asistenciaActualizada', (message) => {
+                    showMessage = true;
+                    setTimeout(() => {
+                        showMessage = false;
+                    }, 1000); 
+                });
+            ">
+            <!-- Mensaje de confirmación -->
+            <div x-show="showMessage" class="fixed bottom-4 right-4 bg-green-500 text-white py-2 px-4 rounded-md shadow-md">
+                <span x-text="message"></span>
+            </div>
+        </div>
+        <div x-data="{ showMessageO: false, messageO: 'La observacion se ha realizado correctamente.' }"
+            x-init="
+                @this.on('observacionActualizada', (messageO) => {
+                    showMessageO = true;
+                    setTimeout(() => {
+                        showMessageO = false;
+                    }, 1000); 
+                });
+            ">
+            <!-- Mensaje de confirmación -->
+            <div x-show="showMessageO" class="fixed bottom-4 right-4 bg-green-500 text-white py-2 px-4 rounded-md shadow-md">
+                <span x-text="messageO"></span>
+            </div>
+        </div>
+
     </div>
+    
+
 
 </div>
 
 <script>
-    window.addEventListener('load', function () {
-    // Crear la instancia del tooltip si no existe
-    const tooltipTrigger = document.querySelector('[data-tooltip-target="tooltip-website-url"]');
-    const tooltipElement = document.getElementById('tooltip-website-url');
-    const tooltip = new Tooltip(tooltipElement, tooltipTrigger);
+    document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const inputId = button.getAttribute('data-copy');
+            const input = document.getElementById(inputId);
+            const tooltip = button.parentElement.querySelector('.tooltip');
 
-    // Crear la instancia de CopyClipboard si no existe
-    const button = document.querySelector('[data-copy-to-clipboard-target]');
-    const targetId = button.getAttribute('data-copy-to-clipboard-target');
-    const targetElement = document.getElementById(targetId);
-    const clipboard = new CopyClipboard(button, targetElement);
-
-    const $defaultIcon = document.getElementById('default-icon');
-    const $successIcon = document.getElementById('success-icon');
-
-    const $defaultTooltipMessage = document.getElementById('default-tooltip-message');
-    const $successTooltipMessage = document.getElementById('success-tooltip-message');
-
-    clipboard.updateOnCopyCallback(() => {
-        showSuccess();
-        setTimeout(() => {
-            resetToDefault();
-        }, 2000);
+            navigator.clipboard.writeText(input.value).then(() => {
+                tooltip.classList.remove('hidden');
+                setTimeout(() => {
+                    tooltip.classList.add('hidden');
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar:', err);
+            });
+        });
     });
-
-    const showSuccess = () => {
-        $defaultIcon.classList.add('hidden');
-        $successIcon.classList.remove('hidden');
-        $defaultTooltipMessage.classList.add('hidden');
-        $successTooltipMessage.classList.remove('hidden');
-        tooltip.show();
-    }
-
-    const resetToDefault = () => {
-        $defaultIcon.classList.remove('hidden');
-        $successIcon.classList.add('hidden');
-        $defaultTooltipMessage.classList.remove('hidden');
-        $successTooltipMessage.classList.add('hidden');
-        tooltip.hide();
-    }
-});
 
 </script>

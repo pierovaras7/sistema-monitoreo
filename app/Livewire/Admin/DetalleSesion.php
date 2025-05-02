@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Asistencia;
 use App\Models\Sesion;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -26,10 +27,10 @@ class DetalleSesion extends Component
         $this->link_asistencia = $this->sesion->link_asistencia;
     }
 
-    // public function updated($propertyName)
-    // {
-    //     $this->validateOnly($propertyName);
-    // }
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
 
     // Método para actualizar la sesión
     public function actualizarSesion()
@@ -61,7 +62,39 @@ class DetalleSesion extends Component
         session()->flash('success', 'La sesión se ha actualizado correctamente.');
     }
 
+    public function actualizarAsistencia($asistenciaId, $asistio)
+    {
+        // Buscar la asistencia por su ID
+        $asistencia = Asistencia::find($asistenciaId);
     
+        if (!$asistencia) {
+            // Si no se encuentra la asistencia, lanzamos un mensaje de error
+            session()->flash('error', 'Asistencia no encontrada.');
+            return;
+        }
+    
+        // Actualizamos el estado de asistencia
+        $asistencia->asistio = $asistio;
+        $asistencia->save();
+    
+        // Mensaje de éxito
+        $this->dispatch('asistenciaActualizada');
+    }
+    
+    public function guardarObservacion($id, $observacion)
+    {
+        $asistencia = Asistencia::find($id);
+        
+        if ($asistencia) {
+            // Actualizamos la observación
+            $asistencia->observacion = $observacion;
+            $asistencia->save();
+        }
+
+        $this->dispatch('observacionActualizada');
+
+    }
+
 
     public function abrirModalAgregar()
     {
