@@ -248,7 +248,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($sesion->asistencias as $index => $asistencia)
+                        @foreach ($asistencias as $index => $asistencia)
                             <tr
                                 class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
                                 <td class="px-4 py-4 font-medium text-gray-900 dark:text-white">
@@ -301,7 +301,7 @@
                 </table>
                 <!-- Paginación -->
                 <div class="p-4">
-                    {{ $sesion->asistencias->links() }}
+                    {{ $asistencias->links() }}
                 </div>
             </div>
         </div>

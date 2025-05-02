@@ -6,6 +6,7 @@
     >
         <div 
             x-show="open" 
+            x-cloak
             class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
         >
             <div 
@@ -49,7 +50,7 @@
     </div>
 
     <div x-data="{ open: false, message: '' }" x-on:mostrar-modal-exito.window="open = true; message = $event.detail.message">
-        <div x-show="open" x-transition class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div x-show="open" x-cloak x-transition class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div class="bg-white rounded-lg p-4 max-w-lg w-full">
                 <h2 class="text-lg font-semibold mb-4 text-green-600">¡Éxito!</h2>
                 <p class="text-sm">Alumnos importados correctamente.</p>

@@ -66,25 +66,25 @@ class DetalleSesion extends Component
     {
         // Buscar la asistencia por su ID
         $asistencia = Asistencia::find($asistenciaId);
-    
+
         if (!$asistencia) {
             // Si no se encuentra la asistencia, lanzamos un mensaje de error
             session()->flash('error', 'Asistencia no encontrada.');
             return;
         }
-    
+
         // Actualizamos el estado de asistencia
         $asistencia->asistio = $asistio;
         $asistencia->save();
-    
+
         // Mensaje de éxito
         $this->dispatch('asistenciaActualizada');
     }
-    
+
     public function guardarObservacion($id, $observacion)
     {
         $asistencia = Asistencia::find($id);
-        
+
         if ($asistencia) {
             // Actualizamos la observación
             $asistencia->observacion = $observacion;
@@ -92,7 +92,6 @@ class DetalleSesion extends Component
         }
 
         $this->dispatch('observacionActualizada');
-
     }
 
 
@@ -119,6 +118,11 @@ class DetalleSesion extends Component
 
     public function render()
     {
-        return view('livewire.admin.detalle-sesion');
+        $asistencias = Asistencia::where('sesiones_id', $this->sesionId)
+            ->paginate(10);
+
+        return view('livewire.admin.detalle-sesion', [
+            'asistencias' => $asistencias,
+        ]);
     }
 }
